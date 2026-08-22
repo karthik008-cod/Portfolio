@@ -1,7 +1,5 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
-import 'react-quill/dist/quill.snow.css'; // ES6
 
 // Dynamically import react-quill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false, loading: () => <div style={{ height: '100px', background: '#F6F1EA', borderRadius: '4px', border: '1px solid #E6E0D5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9C9889', fontSize: '13px' }}>Loading editor...</div> });
