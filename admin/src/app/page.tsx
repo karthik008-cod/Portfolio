@@ -2,7 +2,7 @@ import { connectToDatabase, Project, Skill, Detail } from '@/lib/db';
 import { ProjectForm } from '@/components/ProjectForm';
 import { ProjectList } from '@/components/ProjectList';
 import { SkillList } from '@/components/SkillList';
-import { addSkill, updateDetail } from '@/app/actions';
+import { addSkill, updateAllDetails } from '@/app/actions';
 import { SubmitButton } from '@/components/SubmitButton';
 import { RichTextInput } from '@/components/RichTextInput';
 
@@ -30,40 +30,29 @@ export default async function AdminPage() {
         <section style={{ background: '#FFF', border: '1px solid #E6E0D5', borderRadius: '8px', padding: '24px', marginBottom: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
           <h2 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 20px', paddingBottom: '12px', borderBottom: '1px solid #F6F1EA' }}>Personal Details</h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-            <form action={updateDetail} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <input type="hidden" name="key" value="hero-title" />
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Title</label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input name="value" defaultValue={getDetail('hero-title')} placeholder="Hi, I'm Yuvaan" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <SubmitButton style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>Save</SubmitButton>
+          <form action={updateAllDetails}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Title</label>
+                <input name="hero-title" defaultValue={getDetail('hero-title')} placeholder="Hi, I'm Yuvaan" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
               </div>
-            </form>
 
-            <form action={updateDetail} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <input type="hidden" name="key" value="hero-subtitle" />
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Subtitle</label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input name="value" defaultValue={getDetail('hero-subtitle')} placeholder="Student / Developer" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <SubmitButton style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>Save</SubmitButton>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Subtitle</label>
+                <input name="hero-subtitle" defaultValue={getDetail('hero-subtitle')} placeholder="Student / Developer" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
               </div>
-            </form>
-            
-            <form action={updateDetail} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <input type="hidden" name="key" value="email" />
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Contact Email</label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input name="value" defaultValue={getDetail('email')} placeholder="hello@example.com" type="email" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <SubmitButton style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>Save</SubmitButton>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Contact Email</label>
+                <input name="email" defaultValue={getDetail('email')} placeholder="hello@example.com" type="email" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
               </div>
-            </form>
-          </div>
+            </div>
 
-          <form action={updateDetail} style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '20px' }}>
-            <input type="hidden" name="key" value="about-me" />
-            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860', marginBottom: '4px' }}>About Me</label>
-            <RichTextInput name="value" defaultValue={getDetail('about-me')} placeholder="Your biography..." />
-            <SubmitButton style={{ alignSelf: 'flex-start', background: '#1C1B18', color: '#fff', border: 'none', padding: '8px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, marginTop: '8px' }}>Save Biography</SubmitButton>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '20px' }}>
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860', marginBottom: '4px' }}>About Me</label>
+              <RichTextInput name="about-me" defaultValue={getDetail('about-me')} placeholder="Your biography..." />
+              <SubmitButton pendingText="Saving All Details..." style={{ alignSelf: 'flex-start', background: '#1C1B18', color: '#fff', border: 'none', padding: '10px 24px', borderRadius: '4px', fontSize: '14px', fontWeight: 600, marginTop: '12px' }}>Save All Details</SubmitButton>
+            </div>
           </form>
         </section>
 

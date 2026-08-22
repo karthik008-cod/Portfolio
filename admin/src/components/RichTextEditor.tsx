@@ -6,15 +6,15 @@ import 'react-quill/dist/quill.snow.css'; // ES6
 // Dynamically import react-quill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false, loading: () => <div style={{ height: '100px', background: '#F6F1EA', borderRadius: '4px', border: '1px solid #E6E0D5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9C9889', fontSize: '13px' }}>Loading editor...</div> });
 
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'color': [] }, { 'background': [] }],
+    ['clean']
+  ]
+};
+
 export function RichTextEditor({ value, onChange, placeholder }: { value: string, onChange: (val: string) => void, placeholder?: string }) {
-  // Modules configuration for the toolbar
-  const modules = useMemo(() => ({
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-      [{ 'color': [] }, { 'background': [] }],   // dropdown with defaults from theme
-      ['clean']                                  // remove formatting button
-    ]
-  }), []);
 
   return (
     <div style={{ background: '#FFFDF8', borderRadius: '4px' }} className="rich-text-container">
@@ -32,7 +32,7 @@ export function RichTextEditor({ value, onChange, placeholder }: { value: string
           border-bottom-right-radius: 4px;
           font-family: inherit;
           font-size: 14px;
-          min-height: 100px;
+          background: #FFF;
         }
         .rich-text-container .ql-editor {
           min-height: 100px;

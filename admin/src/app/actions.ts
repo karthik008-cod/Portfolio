@@ -49,6 +49,22 @@ export async function updateDetail(formData: FormData) {
   revalidatePath('/');
 }
 
+export async function updateAllDetails(formData: FormData) {
+  await connectToDatabase();
+  
+  const heroTitle = formData.get('hero-title') as string;
+  const heroSubtitle = formData.get('hero-subtitle') as string;
+  const email = formData.get('email') as string;
+  const aboutMe = formData.get('about-me') as string;
+
+  if (heroTitle !== null) await Detail.findOneAndUpdate({ key: 'hero-title' }, { value: heroTitle }, { upsert: true });
+  if (heroSubtitle !== null) await Detail.findOneAndUpdate({ key: 'hero-subtitle' }, { value: heroSubtitle }, { upsert: true });
+  if (email !== null) await Detail.findOneAndUpdate({ key: 'email' }, { value: email }, { upsert: true });
+  if (aboutMe !== null) await Detail.findOneAndUpdate({ key: 'about-me' }, { value: aboutMe }, { upsert: true });
+
+  revalidatePath('/');
+}
+
 export async function updateProject(formData: FormData) {
   await connectToDatabase();
   
