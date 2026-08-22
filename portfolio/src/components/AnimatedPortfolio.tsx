@@ -356,9 +356,26 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 <motion.div
                   variants={i % 2 === 0 ? fadeLeft : fadeRight}
                   style={{ maxWidth: 680, width: '100%', margin: i % 2 === 0 ? '0' : '0 0 0 auto', position: 'relative' }}
+                  className="portfolio-gallery-container"
                 >
+                  <style>{`
+                    .portfolio-gallery-container .gallery-scroll {
+                      scrollbar-width: thin;
+                      scrollbar-color: #B8704A transparent;
+                    }
+                    .portfolio-gallery-container .gallery-scroll::-webkit-scrollbar {
+                      height: 6px;
+                    }
+                    .portfolio-gallery-container .gallery-scroll::-webkit-scrollbar-track {
+                      background: transparent;
+                    }
+                    .portfolio-gallery-container .gallery-scroll::-webkit-scrollbar-thumb {
+                      background-color: #B8704A;
+                      border-radius: 10px;
+                    }
+                  `}</style>
                   {p.images && p.images.length > 1 ? (
-                    <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', paddingBottom: 8, scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+                    <div className="gallery-scroll" style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', paddingBottom: 16, WebkitOverflowScrolling: 'touch' }}>
                       {p.images.map((img: string, idx: number) => (
                         <motion.div
                           key={idx}
