@@ -4,6 +4,7 @@ import { ProjectList } from '@/components/ProjectList';
 import { SkillList } from '@/components/SkillList';
 import { addSkill, updateDetail } from '@/app/actions';
 import { SubmitButton } from '@/components/SubmitButton';
+import { RichTextInput } from '@/components/RichTextInput';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,8 +61,8 @@ export default async function AdminPage() {
 
           <form action={updateDetail} style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '20px' }}>
             <input type="hidden" name="key" value="about-me" />
-            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>About Me</label>
-            <textarea name="value" defaultValue={getDetail('about-me')} placeholder="Your biography..." style={{ width: '100%', border: '1px solid #E6E0D5', padding: '12px', borderRadius: '4px', fontSize: '14px', height: '100px', resize: 'none', outline: 'none', fontFamily: 'inherit' }} />
+            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860', marginBottom: '4px' }}>About Me</label>
+            <RichTextInput name="value" defaultValue={getDetail('about-me')} placeholder="Your biography..." />
             <SubmitButton style={{ alignSelf: 'flex-start', background: '#1C1B18', color: '#fff', border: 'none', padding: '8px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, marginTop: '8px' }}>Save Biography</SubmitButton>
           </form>
         </section>

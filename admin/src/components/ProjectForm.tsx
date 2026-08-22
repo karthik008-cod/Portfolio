@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { addProject, updateProject } from '@/app/actions';
 import { SubmitButton } from './SubmitButton';
+import { RichTextInput } from './RichTextInput';
 
 export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: () => void }) {
   // Initialize with existing images or backward compatible single image
@@ -36,7 +37,7 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
       {isEdit && <input type="hidden" name="id" value={project.id} />}
       
       <input name="title" defaultValue={project?.title} placeholder="Project title" required style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-      <textarea name="description" defaultValue={project?.description} placeholder="Description" required style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', height: '80px', resize: 'none', outline: 'none' }} />
+      <RichTextInput name="description" defaultValue={project?.description} placeholder="Description" />
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <input name="link" defaultValue={project?.link} placeholder="URL (optional)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />

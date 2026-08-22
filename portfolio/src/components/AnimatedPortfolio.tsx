@@ -282,9 +282,10 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
               exit="exit"
               viewport={{ once: false, amount: 0.3 }}
             >
-              <p style={{ fontSize: 'clamp(1rem, 1.8vw, 1.2rem)', lineHeight: 1.8, color: '#3A3832', fontWeight: 300, maxWidth: 700 }}>
-                {get('about-me') || 'Write your biography in the admin dashboard and it will appear here.'}
-              </p>
+              <div 
+                style={{ fontSize: 'clamp(1rem, 1.8vw, 1.2rem)', lineHeight: 1.8, color: '#3A3832', fontWeight: 300, maxWidth: 700 }}
+                dangerouslySetInnerHTML={{ __html: get('about-me') || 'Write your biography in the admin dashboard and it will appear here.' }}
+              />
             </motion.div>
           </div>
 
@@ -426,9 +427,10 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                   }}>
                     {p.title}
                   </h3>
-                  <p style={{ color: '#7A766C', fontSize: 14, fontWeight: 300, lineHeight: 1.75, margin: '0 0 20px' }}>
-                    {p.description}
-                  </p>
+                  <div 
+                    style={{ color: '#7A766C', fontSize: 14, fontWeight: 300, lineHeight: 1.75, margin: '0 0 20px' }}
+                    dangerouslySetInnerHTML={{ __html: p.description }}
+                  />
                   {p.link && (
                     <motion.a
                       href={p.link}
