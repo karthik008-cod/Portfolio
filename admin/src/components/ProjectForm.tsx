@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { addProject, updateProject } from '@/app/actions';
+import { SubmitButton } from './SubmitButton';
 
 export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: () => void }) {
   // Initialize with existing images or backward compatible single image
@@ -70,9 +71,9 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
       )}
       
       <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-        <button type="submit" style={{ background: '#B8704A', color: '#fff', padding: '10px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', border: 'none', flex: 1 }}>
+        <SubmitButton style={{ background: '#B8704A', color: '#fff', padding: '10px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: 500, border: 'none', flex: 1 }}>
           {isEdit ? 'Save Changes' : 'Add Project'}
-        </button>
+        </SubmitButton>
         {isEdit && (
           <button type="button" onClick={onCancel} style={{ background: '#E6E0D5', color: '#1C1B18', padding: '10px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', border: 'none' }}>
             Cancel

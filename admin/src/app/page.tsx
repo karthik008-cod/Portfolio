@@ -3,6 +3,7 @@ import { ProjectForm } from '@/components/ProjectForm';
 import { ProjectList } from '@/components/ProjectList';
 import { SkillList } from '@/components/SkillList';
 import { addSkill, updateDetail } from '@/app/actions';
+import { SubmitButton } from '@/components/SubmitButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ export default async function AdminPage() {
               <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Title</label>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input name="value" defaultValue={getDetail('hero-title')} placeholder="Hi, I'm Yuvaan" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <button style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>Save</button>
+                <SubmitButton style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>Save</SubmitButton>
               </div>
             </form>
 
@@ -43,7 +44,7 @@ export default async function AdminPage() {
               <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Subtitle</label>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input name="value" defaultValue={getDetail('hero-subtitle')} placeholder="Student / Developer" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <button style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>Save</button>
+                <SubmitButton style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>Save</SubmitButton>
               </div>
             </form>
             
@@ -52,7 +53,7 @@ export default async function AdminPage() {
               <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Contact Email</label>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input name="value" defaultValue={getDetail('email')} placeholder="hello@example.com" type="email" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <button style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>Save</button>
+                <SubmitButton style={{ background: '#1C1B18', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>Save</SubmitButton>
               </div>
             </form>
           </div>
@@ -61,7 +62,7 @@ export default async function AdminPage() {
             <input type="hidden" name="key" value="about-me" />
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>About Me</label>
             <textarea name="value" defaultValue={getDetail('about-me')} placeholder="Your biography..." style={{ width: '100%', border: '1px solid #E6E0D5', padding: '12px', borderRadius: '4px', fontSize: '14px', height: '100px', resize: 'none', outline: 'none', fontFamily: 'inherit' }} />
-            <button style={{ alignSelf: 'flex-start', background: '#1C1B18', color: '#fff', border: 'none', padding: '8px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, cursor: 'pointer', marginTop: '8px' }}>Save Biography</button>
+            <SubmitButton style={{ alignSelf: 'flex-start', background: '#1C1B18', color: '#fff', border: 'none', padding: '8px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: 500, marginTop: '8px' }}>Save Biography</SubmitButton>
           </form>
         </section>
 
@@ -96,7 +97,7 @@ export default async function AdminPage() {
               </div>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <input type="number" name="level" placeholder="Level (1-100)" min="1" max="100" style={{ width: '120px', border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-                <button type="submit" style={{ flex: 1, background: '#B8704A', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>Add Skill</button>
+                <SubmitButton pendingText="Adding..." style={{ flex: 1, background: '#B8704A', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '14px', fontWeight: 500 }}>Add Skill</SubmitButton>
               </div>
             </form>
 

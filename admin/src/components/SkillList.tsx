@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { deleteSkill, updateSkill } from '@/app/actions';
+import { SubmitButton } from './SubmitButton';
 
 export function SkillList({ skills }: { skills: any[] }) {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export function SkillList({ skills }: { skills: any[] }) {
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input type="number" name="level" defaultValue={s.level} placeholder="Level %" min="1" max="100" style={{ width: '80px', border: '1px solid #E6E0D5', padding: '6px 8px', borderRadius: '4px', fontSize: '13px', outline: 'none' }} />
-                <button type="submit" style={{ flex: 1, background: '#B8704A', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Save</button>
+                <SubmitButton style={{ flex: 1, background: '#B8704A', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>Save</SubmitButton>
                 <button type="button" onClick={() => setEditingId(null)} style={{ flex: 1, background: '#E6E0D5', color: '#1C1B18', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
               </div>
             </form>
@@ -31,7 +32,7 @@ export function SkillList({ skills }: { skills: any[] }) {
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button onClick={() => setEditingId(s.id)} style={{ background: 'none', border: 'none', color: '#B8704A', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Edit</button>
                 <form action={deleteSkill.bind(null, s.id)}>
-                  <button style={{ background: 'none', border: 'none', color: '#dc2626', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Delete</button>
+                  <SubmitButton pendingText="Deleting..." style={{ background: 'none', border: 'none', color: '#dc2626', fontSize: '12px', fontWeight: 600 }}>Delete</SubmitButton>
                 </form>
               </div>
             </div>

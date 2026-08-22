@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { deleteProject } from '@/app/actions';
 import { ProjectForm } from './ProjectForm';
+import { SubmitButton } from './SubmitButton';
 
 export function ProjectList({ projects }: { projects: any[] }) {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export function ProjectList({ projects }: { projects: any[] }) {
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button onClick={() => setEditingId(p.id)} style={{ background: 'none', border: 'none', color: '#B8704A', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Edit</button>
                 <form action={deleteProject.bind(null, p.id)}>
-                  <button style={{ background: 'none', border: 'none', color: '#dc2626', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>Delete</button>
+                  <SubmitButton pendingText="Deleting..." style={{ background: 'none', border: 'none', color: '#dc2626', fontSize: '12px', fontWeight: 600 }}>Delete</SubmitButton>
                 </form>
               </div>
             </div>
