@@ -50,7 +50,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 // Smooth reveal wrapper
-const reveal = {
+const reveal: any = {
   hidden: { opacity: 0, y: 50 },
   visible: (delay = 0) => ({
     opacity: 1,
