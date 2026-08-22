@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: portfolio-site
+    env: node
+    rootDir: portfolio
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+
+  - type: web
+    name: portfolio-admin
+    env: node
+    rootDir: admin
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
