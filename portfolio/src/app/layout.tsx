@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, Space_Grotesk } from "next/font/google";
-import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-display",
