@@ -1,12 +1,10 @@
 'use client';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 
 /* ─────────────────────────────────────────────────────────────
-   UTILITY COMPONENTS
+   ANIMATED COUNTER
    ───────────────────────────────────────────────────────────── */
-
-// Animated number counter
 function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
@@ -20,7 +18,7 @@ function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
         if (e.isIntersecting && !done.current) {
           done.current = true;
           const t0 = performance.now();
-          const dur = 1800;
+          const dur = 2000;
           const step = (now: number) => {
             const p = Math.min((now - t0) / dur, 1);
             const ease = 1 - Math.pow(1 - p, 4);
@@ -39,24 +37,82 @@ function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
   return <span ref={ref}>{val}{suffix}</span>;
 }
 
-// Section label (used consistently)
+/* ─────────────────────────────────────────────────────────────
+   SECTION LABEL
+   ───────────────────────────────────────────────────────────── */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.25em] text-[#B8704A] mb-6">
-      <span className="block w-6 h-[1.5px] bg-[#B8704A]" />
+    <motion.span
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      viewport={{ once: false, amount: 0.5 }}
+      transition={{ duration: 0.5 }}
+      className="inline-flex items-center gap-3 mb-6"
+      style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.25em', color: '#B8704A' }}
+    >
+      <motion.span
+        initial={{ width: 0 }}
+        whileInView={{ width: 24 }}
+        viewport={{ once: false }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        style={{ display: 'block', height: '1.5px', backgroundColor: '#B8704A' }}
+      />
       {children}
-    </span>
+    </motion.span>
   );
 }
 
-// Smooth reveal wrapper
-const reveal: any = {
-  hidden: { opacity: 0, y: 50 },
-  visible: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.85, delay, ease: [0.22, 1, 0.36, 1] },
+/* ─────────────────────────────────────────────────────────────
+   ANIMATION VARIANTS
+   ───────────────────────────────────────────────────────────── */
+
+// Fade up with exit
+const fadeUp: any = {
+  hidden: { opacity: 0, y: 60 },
+  visible: (d: number = 0) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.8, delay: d, ease: [0.22, 1, 0.36, 1] },
   }),
+  exit: { opacity: 0, y: -30, transition: { duration: 0.4 } },
+};
+
+// Fade from left
+const fadeLeft: any = {
+  hidden: { opacity: 0, x: -60 },
+  visible: (d: number = 0) => ({
+    opacity: 1, x: 0,
+    transition: { duration: 0.7, delay: d, ease: [0.22, 1, 0.36, 1] },
+  }),
+  exit: { opacity: 0, x: -40, transition: { duration: 0.3 } },
+};
+
+// Fade from right
+const fadeRight: any = {
+  hidden: { opacity: 0, x: 60 },
+  visible: (d: number = 0) => ({
+    opacity: 1, x: 0,
+    transition: { duration: 0.7, delay: d, ease: [0.22, 1, 0.36, 1] },
+  }),
+  exit: { opacity: 0, x: 40, transition: { duration: 0.3 } },
+};
+
+// Scale in
+const scaleIn: any = {
+  hidden: { opacity: 0, scale: 0.85 },
+  visible: (d: number = 0) => ({
+    opacity: 1, scale: 1,
+    transition: { duration: 0.7, delay: d, ease: [0.22, 1, 0.36, 1] },
+  }),
+  exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } },
+};
+
+// Stagger children container
+const stagger: any = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -69,17 +125,19 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
     offset: ['start start', 'end start'],
   });
 
-  const heroY = useTransform(heroScroll, [0, 1], ['0%', '35%']);
-  const heroOp = useTransform(heroScroll, [0, 0.7], [1, 0]);
-  const heroScale = useTransform(heroScroll, [0, 1], [1, 0.92]);
+  // Parallax transforms for hero
+  const heroY = useTransform(heroScroll, [0, 1], ['0%', '50%']);
+  const heroOp = useTransform(heroScroll, [0, 0.6], [1, 0]);
+  const heroScale = useTransform(heroScroll, [0, 1], [1, 0.88]);
+  const heroRotate = useTransform(heroScroll, [0, 1], [0, -2]);
 
-  // Global scroll progress → thin accent bar on left
+  // Global scroll progress bar
   const { scrollYProgress } = useScroll();
-  const barScale = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
+  const barScale = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
 
   const get = (key: string) => details.find((d: any) => d.key === key)?.value || '';
 
-  // Group skills by category
+  // Group skills
   const grouped = skills.reduce((a: any, s: any) => {
     const c = s.category || 'General';
     (a[c] = a[c] || []).push(s);
@@ -87,205 +145,306 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
   }, {} as Record<string, any[]>);
 
   return (
-    <div className="w-full relative">
-      {/* Progress bar */}
+    <div style={{ width: '100%', position: 'relative', overflowX: 'hidden', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
+
+      {/* ── Scroll progress bar ── */}
       <motion.div
-        style={{ scaleY: barScale }}
-        className="fixed left-0 top-0 w-[2px] h-full bg-[#B8704A] origin-top z-50"
+        style={{
+          scaleY: barScale,
+          position: 'fixed', left: 0, top: 0, width: '3px', height: '100%',
+          background: 'linear-gradient(180deg, #B8704A 0%, #D4956E 100%)',
+          transformOrigin: 'top', zIndex: 50,
+        }}
       />
 
       {/* ════════════════════════════════════════════════════════
-          HERO
+          HERO SECTION
           ════════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
-        className="relative h-screen flex items-center justify-center overflow-hidden grain"
-        style={{ background: 'linear-gradient(180deg, #FFFDF8 0%, #F6F1EA 100%)' }}
+        style={{
+          height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          overflow: 'hidden', position: 'relative',
+          background: 'radial-gradient(ellipse at 50% 30%, #FFF9F0 0%, #F3EDE3 60%, #EDE5D8 100%)',
+        }}
       >
-        {/* Subtle decorative circle */}
-        <div className="absolute w-[600px] h-[600px] rounded-full border border-[#E6E0D5] opacity-30 pointer-events-none" />
-        <div className="absolute w-[400px] h-[400px] rounded-full border border-[#E6E0D5] opacity-20 pointer-events-none" />
+        {/* Decorative circles — parallax at different rates */}
+        <motion.div
+          style={{ y: useTransform(heroScroll, [0, 1], ['0%', '20%']) }}
+          className="absolute pointer-events-none"
+        >
+          <div style={{ width: 500, height: 500, borderRadius: '50%', border: '1px solid rgba(184,112,74,0.08)', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+          <div style={{ width: 350, height: 350, borderRadius: '50%', border: '1px solid rgba(184,112,74,0.05)', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+        </motion.div>
+
+        {/* Corner accents */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          style={{ position: 'absolute', top: 40, left: 40, width: 60, height: 60, borderLeft: '1.5px solid #B8704A', borderTop: '1.5px solid #B8704A' }}
+        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ delay: 1.4, duration: 0.8 }}
+          style={{ position: 'absolute', bottom: 40, right: 40, width: 60, height: 60, borderRight: '1.5px solid #B8704A', borderBottom: '1.5px solid #B8704A' }}
+        />
 
         <motion.div
-          style={{ y: heroY, opacity: heroOp, scale: heroScale }}
-          className="relative z-10 text-center px-6 max-w-4xl"
+          style={{ y: heroY, opacity: heroOp, scale: heroScale, rotateZ: heroRotate }}
+          className="relative z-10 text-center px-6"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          <motion.p
+            initial={{ opacity: 0, y: 20, letterSpacing: '0.1em' }}
+            animate={{ opacity: 1, y: 0, letterSpacing: '0.3em' }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#B8704A', marginBottom: 32 }}
           >
-            <SectionLabel>Portfolio</SectionLabel>
-          </motion.div>
+            Portfolio
+          </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 45 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-            className="font-display text-[clamp(3rem,8vw,8rem)] leading-[0.92] tracking-[-0.03em] text-[#1C1B18]"
+            initial={{ opacity: 0, y: 60, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            style={{
+              fontFamily: "'DM Serif Display', Georgia, serif",
+              fontSize: 'clamp(2.5rem, 7vw, 6rem)',
+              lineHeight: 0.95,
+              letterSpacing: '-0.02em',
+              color: '#1C1B18',
+              margin: 0,
+            }}
           >
             {get('hero-title') || 'Your Name'}
           </motion.h1>
 
           <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="w-14 h-[1.5px] bg-[#B8704A] mx-auto mt-8 mb-8 origin-left"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            style={{ width: 50, height: 1.5, background: '#B8704A', margin: '28px auto', transformOrigin: 'left' }}
           />
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
-            className="text-lg md:text-xl text-[#6B6860] font-light max-w-lg mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            style={{ fontSize: 'clamp(0.95rem, 2vw, 1.15rem)', color: '#6B6860', fontWeight: 300, maxWidth: 420, margin: '0 auto', lineHeight: 1.7 }}
           >
             {get('hero-subtitle') || 'A brief subtitle about you'}
           </motion.p>
         </motion.div>
 
         {/* Scroll cue */}
-        <div className="absolute bottom-10 flex flex-col items-center gap-2">
-          <span className="text-[9px] uppercase tracking-[0.35em] text-[#9C9889] font-medium">Scroll</span>
-          <div className="w-[1px] h-10 bg-[#B8704A]/30 relative overflow-hidden">
-            <div className="w-full h-4 bg-[#B8704A] animate-scroll-down" />
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5, duration: 0.5 }}
+          style={{ position: 'absolute', bottom: 36, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
+        >
+          <span style={{ fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.35em', color: '#9C9889', fontWeight: 500 }}>Scroll</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ width: 1, height: 32, background: 'linear-gradient(180deg, #B8704A 0%, transparent 100%)' }}
+          />
+        </motion.div>
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          ABOUT
+          ABOUT SECTION
           ════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 md:py-36 px-6 grain" style={{ background: '#F6F1EA' }}>
-        <div className="max-w-5xl mx-auto relative z-10">
-          <motion.div
-            variants={reveal}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16"
-          >
-            <div className="md:col-span-4">
+      <section style={{ position: 'relative', padding: '120px 24px', background: '#F3EDE3' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 48 }}>
+            {/* Heading */}
+            <motion.div
+              variants={fadeLeft}
+              initial="hidden"
+              whileInView="visible"
+              exit="exit"
+              viewport={{ once: false, amount: 0.3 }}
+            >
               <SectionLabel>About</SectionLabel>
-              <h2 className="font-display text-4xl md:text-5xl text-[#1C1B18] leading-[1.1]">
+              <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: 0 }}>
                 Who I Am
               </h2>
-            </div>
-            <div className="md:col-span-8 flex flex-col">
-              <p className="text-lg md:text-[1.35rem] leading-[1.75] text-[#3A3832] font-light">
+            </motion.div>
+
+            {/* Body text */}
+            <motion.div
+              variants={fadeUp}
+              custom={0.15}
+              initial="hidden"
+              whileInView="visible"
+              exit="exit"
+              viewport={{ once: false, amount: 0.3 }}
+            >
+              <p style={{ fontSize: 'clamp(1rem, 1.8vw, 1.2rem)', lineHeight: 1.8, color: '#3A3832', fontWeight: 300, maxWidth: 700 }}>
                 {get('about-me') || 'Write your biography in the admin dashboard and it will appear here.'}
               </p>
-              <div className="divider mt-14" />
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
-          {/* Stats */}
+          {/* Stats row */}
           <motion.div
-            variants={reveal}
-            custom={0.2}
+            variants={stagger}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20"
+            viewport={{ once: false, amount: 0.3 }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 32, marginTop: 72 }}
           >
             {[
               { v: projects.length, l: 'Projects', s: '+' },
               { v: skills.length, l: 'Skills', s: '+' },
               { v: Object.keys(grouped).length, l: 'Domains', s: '' },
-              { v: new Date().getFullYear() - 2020, l: 'Years Exp', s: '+' },
+              { v: new Date().getFullYear() - 2020, l: 'Years', s: '+' },
             ].map((s, i) => (
-              <div key={i} className="text-center md:text-left">
-                <p className="font-display text-4xl md:text-5xl text-[#1C1B18]">
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                style={{ textAlign: 'center', padding: '24px 0' }}
+              >
+                <p style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 2.8rem)', color: '#1C1B18', margin: '0 0 4px' }}>
                   <Counter target={s.v} suffix={s.s} />
                 </p>
-                <p className="text-[#9C9889] text-[11px] uppercase tracking-[0.2em] mt-2 font-semibold">{s.l}</p>
-              </div>
+                <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#9C9889', fontWeight: 600, margin: 0 }}>{s.l}</p>
+              </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          PROJECTS
+          PROJECTS SECTION
           ════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 md:py-36 grain" style={{ background: '#121210' }}>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          {/* Header */}
+      <section style={{ position: 'relative', padding: '120px 24px', background: '#141311' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          {/* Section header */}
           <motion.div
-            variants={reveal}
+            variants={fadeUp}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
-            className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-20"
+            exit="exit"
+            viewport={{ once: false, amount: 0.3 }}
+            style={{ marginBottom: 80 }}
           >
-            <div>
-              <SectionLabel>Work</SectionLabel>
-              <h2 className="font-display text-5xl md:text-6xl lg:text-7xl text-[#E8E4DC] leading-[1]">
-                Selected<br />Projects
-              </h2>
-            </div>
-            <p className="text-[#7A766C] font-light max-w-xs md:text-right text-sm leading-relaxed">
+            <SectionLabel>Work</SectionLabel>
+            <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: '#E8E4DC', lineHeight: 1.05, margin: '0 0 12px' }}>
+              Selected Projects
+            </h2>
+            <p style={{ color: '#7A766C', fontWeight: 300, fontSize: 14, maxWidth: 380, lineHeight: 1.7 }}>
               A curated collection of work reflecting craft and attention to detail.
             </p>
           </motion.div>
 
           {/* Project cards */}
-          <div className="flex flex-col gap-28">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 100 }}>
             {projects.map((p: any, i: number) => (
               <motion.article
                 key={p._id}
-                variants={reveal}
-                custom={0.05}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: '-12%' }}
-                className="group"
+                exit="exit"
+                viewport={{ once: false, amount: 0.2 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: 32 }}
               >
-                <div className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-10 md:gap-14 items-center`}>
-                  {/* Image */}
-                  <div className="w-full md:w-[58%] rounded-xl overflow-hidden relative">
-                    <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.5 }}>
-                      {p.image ? (
-                        <img src={p.image} alt={p.title} className="w-full aspect-[16/10] object-cover rounded-xl" />
-                      ) : (
-                        <div className="w-full aspect-[16/10] bg-[#1E1D1A] rounded-xl flex items-center justify-center">
-                          <span className="text-[#7A766C] text-xs uppercase tracking-[0.2em]">No Image</span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-[#B8704A]/0 group-hover:bg-[#B8704A]/8 transition-colors duration-500 rounded-xl" />
-                    </motion.div>
-                    <span className="absolute top-5 left-5 text-[10px] font-bold uppercase tracking-[0.3em] text-[#B8704A] bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-
-                  {/* Copy */}
-                  <div className="w-full md:w-[42%]">
-                    <h3 className="font-display text-3xl md:text-4xl text-[#E8E4DC] mb-4 group-hover:text-[#D4956E] transition-colors duration-300">
-                      {p.title}
-                    </h3>
-                    <p className="text-[#7A766C] text-base font-light leading-relaxed mb-8">
-                      {p.description}
-                    </p>
-                    {p.link && (
-                      <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover-line text-[#B8704A] text-sm font-semibold uppercase tracking-[0.15em] inline-flex items-center gap-2"
-                      >
-                        View Project
-                        <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                      </a>
+                {/* Image — constrained, not full-width */}
+                <motion.div
+                  variants={i % 2 === 0 ? fadeLeft : fadeRight}
+                  style={{ maxWidth: 680, width: '100%', margin: i % 2 === 0 ? '0' : '0 0 0 auto', borderRadius: 12, overflow: 'hidden', position: 'relative' }}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.04 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {p.image ? (
+                      <img
+                        src={p.image}
+                        alt={p.title}
+                        style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', display: 'block', borderRadius: 12 }}
+                      />
+                    ) : (
+                      <div style={{ width: '100%', aspectRatio: '16/10', background: '#1E1D1A', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ color: '#7A766C', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.2em' }}>No Image</span>
+                      </div>
                     )}
-                  </div>
-                </div>
-                {i < projects.length - 1 && <div className="divider-accent mt-28" />}
+                  </motion.div>
+                  {/* Number badge */}
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: false }}
+                    transition={{ delay: 0.3, duration: 0.4 }}
+                    style={{
+                      position: 'absolute', top: 16, left: 16,
+                      fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em',
+                      color: '#B8704A', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
+                      padding: '6px 12px', borderRadius: 20,
+                    }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </motion.span>
+                </motion.div>
+
+                {/* Text — offset to opposite side */}
+                <motion.div
+                  variants={i % 2 === 0 ? fadeRight : fadeLeft}
+                  custom={0.15}
+                  style={{
+                    maxWidth: 480,
+                    alignSelf: i % 2 === 0 ? 'flex-end' : 'flex-start',
+                    padding: '0 8px',
+                  }}
+                >
+                  <h3 style={{
+                    fontFamily: "'DM Serif Display', Georgia, serif",
+                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                    color: '#E8E4DC', margin: '0 0 12px', lineHeight: 1.2,
+                  }}>
+                    {p.title}
+                  </h3>
+                  <p style={{ color: '#7A766C', fontSize: 14, fontWeight: 300, lineHeight: 1.75, margin: '0 0 20px' }}>
+                    {p.description}
+                  </p>
+                  {p.link && (
+                    <motion.a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ x: 4 }}
+                      style={{
+                        color: '#B8704A', fontSize: 12, fontWeight: 600,
+                        textTransform: 'uppercase', letterSpacing: '0.15em',
+                        textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8,
+                      }}
+                    >
+                      View Project
+                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </motion.a>
+                  )}
+                </motion.div>
+
+                {/* Divider */}
+                {i < projects.length - 1 && (
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: false }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    style={{
+                      height: 1, marginTop: 20, transformOrigin: 'left',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(184,112,74,0.3) 50%, transparent 100%)',
+                    }}
+                  />
+                )}
               </motion.article>
             ))}
 
             {projects.length === 0 && (
-              <p className="text-center text-[#7A766C] text-base py-20">
+              <p style={{ textAlign: 'center', color: '#7A766C', padding: '60px 0', fontSize: 15 }}>
                 No projects published yet. Add one from the admin dashboard!
               </p>
             )}
@@ -294,64 +453,78 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          SKILLS
+          SKILLS SECTION
           ════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 md:py-36 px-6" style={{ background: '#FFFDF8' }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-16 md:gap-24 relative">
-            {/* Sticky heading */}
-            <div className="w-full md:w-[35%]">
-              <div className="sticky top-28">
-                <motion.div variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                  <SectionLabel>Expertise</SectionLabel>
-                  <h2 className="font-display text-5xl md:text-6xl text-[#1C1B18] leading-[1.05] mb-5">
-                    Skills &<br />Tools
-                  </h2>
-                  <p className="text-[#6B6860] text-base font-light leading-relaxed max-w-xs">
-                    Technologies I use to build digital experiences. Scroll to explore.
-                  </p>
-                  <div className="w-10 h-[1.5px] bg-[#B8704A] mt-8" />
-                </motion.div>
-              </div>
-            </div>
+      <section style={{ position: 'relative', padding: '120px 24px', background: '#FFFDF8' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
+            {/* Section heading */}
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              exit="exit"
+              viewport={{ once: false, amount: 0.3 }}
+            >
+              <SectionLabel>Expertise</SectionLabel>
+              <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.1, margin: '0 0 12px' }}>
+                Skills & Tools
+              </h2>
+              <p style={{ color: '#6B6860', fontSize: 14, fontWeight: 300, maxWidth: 400, lineHeight: 1.7 }}>
+                Technologies I use to build digital experiences.
+              </p>
+            </motion.div>
 
             {/* Skill categories */}
-            <div className="w-full md:w-[65%] flex flex-col gap-14">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
               {Object.entries(grouped).map(([cat, catSkills]: [string, any], ci) => (
                 <motion.div
                   key={cat}
-                  variants={reveal}
+                  variants={fadeUp}
                   custom={ci * 0.08}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true, margin: '-8%' }}
+                  exit="exit"
+                  viewport={{ once: false, amount: 0.2 }}
                 >
-                  <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#B8704A] mb-7 flex items-center gap-3">
-                    <span className="w-5 h-[1px] bg-[#B8704A]" />
+                  {/* Category name */}
+                  <motion.h3
+                    initial={{ opacity: 0, x: -15 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false }}
+                    transition={{ duration: 0.4 }}
+                    style={{
+                      fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
+                      letterSpacing: '0.25em', color: '#B8704A', marginBottom: 24,
+                      display: 'flex', alignItems: 'center', gap: 10,
+                    }}
+                  >
+                    <span style={{ width: 16, height: 1, background: '#B8704A' }} />
                     {cat}
-                  </h3>
-                  <div className="flex flex-col gap-5">
+                  </motion.h3>
+
+                  {/* Individual skills */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                     {catSkills.map((sk: any, si: number) => (
                       <motion.div
                         key={sk._id}
-                        initial={{ opacity: 0, x: 15 }}
+                        initial={{ opacity: 0, x: 30 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.35, delay: si * 0.04 }}
-                        className="group"
+                        exit={{ opacity: 0, x: 20 }}
+                        viewport={{ once: false, amount: 0.5 }}
+                        transition={{ duration: 0.4, delay: si * 0.06 }}
                       >
-                        <div className="flex justify-between items-center mb-2.5">
-                          <span className="text-[#1C1B18] font-semibold text-[15px] group-hover:text-[#B8704A] transition-colors">{sk.name}</span>
-                          <span className="text-[#9C9889] text-xs font-medium tabular-nums">{sk.level || 50}%</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                          <span style={{ color: '#1C1B18', fontWeight: 600, fontSize: 14 }}>{sk.name}</span>
+                          <span style={{ color: '#9C9889', fontSize: 12, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{sk.level || 50}%</span>
                         </div>
-                        <div className="w-full h-[5px] bg-[#E6E0D5] rounded-full overflow-hidden">
+                        <div style={{ width: '100%', height: 4, background: '#E6E0D5', borderRadius: 100, overflow: 'hidden' }}>
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: `${sk.level || 50}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1.1, delay: 0.15 + si * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                            className="h-full rounded-full"
-                            style={{ background: 'linear-gradient(90deg, #B8704A, #D4956E)' }}
+                            viewport={{ once: false }}
+                            transition={{ duration: 1.2, delay: 0.1 + si * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                            style={{ height: '100%', borderRadius: 100, background: 'linear-gradient(90deg, #B8704A, #D4956E)' }}
                           />
                         </div>
                       </motion.div>
@@ -359,7 +532,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                   </div>
                 </motion.div>
               ))}
-              {skills.length === 0 && <p className="text-[#9C9889]">No skills added yet.</p>}
+              {skills.length === 0 && <p style={{ color: '#9C9889' }}>No skills added yet.</p>}
             </div>
           </div>
         </div>
@@ -368,24 +541,42 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
       {/* ════════════════════════════════════════════════════════
           CONTACT CTA
           ════════════════════════════════════════════════════════ */}
-      <section className="relative py-32 md:py-40 grain" style={{ background: 'linear-gradient(180deg, #1E1D1A 0%, #121210 100%)' }}>
-        <div className="max-w-3xl mx-auto text-center px-6 relative z-10">
-          <motion.div variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      <section style={{ position: 'relative', padding: '140px 24px', background: 'linear-gradient(180deg, #1A1917 0%, #121210 100%)' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+          <motion.div
+            variants={scaleIn}
+            initial="hidden"
+            whileInView="visible"
+            exit="exit"
+            viewport={{ once: false, amount: 0.3 }}
+          >
             <SectionLabel>Contact</SectionLabel>
-            <h2 className="font-display text-5xl md:text-7xl text-[#E8E4DC] leading-[1] mb-6">
-              Let&apos;s Build<br />Something
+            <h2 style={{
+              fontFamily: "'DM Serif Display', Georgia, serif",
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              color: '#E8E4DC', lineHeight: 1.1, margin: '0 0 16px',
+            }}>
+              Let&apos;s Build Something
             </h2>
-            <p className="text-[#7A766C] text-base font-light max-w-md mx-auto mb-14 leading-relaxed">
-              Have a project in mind or just want to say hello? I&apos;d love to hear from you.
+            <p style={{ color: '#7A766C', fontSize: 14, fontWeight: 300, maxWidth: 400, margin: '0 auto 48px', lineHeight: 1.7 }}>
+              Have a project in mind or just want to connect? I&apos;d love to hear from you.
             </p>
             <motion.a
               href={`mailto:${get('email') || '#'}`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-3 bg-[#B8704A] text-white px-10 py-4 rounded-full font-semibold text-sm uppercase tracking-[0.15em] hover:bg-[#A06040] transition-colors shadow-lg shadow-[#B8704A]/20 cursor-pointer"
+              whileHover={{ scale: 1.06, boxShadow: '0 12px 40px rgba(184,112,74,0.3)' }}
+              whileTap={{ scale: 0.96 }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                background: '#B8704A', color: '#fff',
+                padding: '14px 36px', borderRadius: 50,
+                fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.12em',
+                textDecoration: 'none', cursor: 'pointer',
+                boxShadow: '0 8px 30px rgba(184,112,74,0.2)',
+                transition: 'background 0.3s',
+              }}
             >
               Say Hello
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </motion.a>
           </motion.div>
         </div>
@@ -394,12 +585,12 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
       {/* ════════════════════════════════════════════════════════
           FOOTER
           ════════════════════════════════════════════════════════ */}
-      <footer className="py-7 bg-[#0A0A09]">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p className="text-[#7A766C] text-xs font-light">
+      <footer style={{ padding: '24px 24px', background: '#0A0A09' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <p style={{ color: '#7A766C', fontSize: 12, fontWeight: 300, margin: 0 }}>
             © {new Date().getFullYear()} {get('hero-title') || 'Portfolio'}
           </p>
-          <p className="text-[#7A766C]/40 text-[10px] tracking-[0.2em] uppercase font-light">
+          <p style={{ color: 'rgba(122,118,108,0.4)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 300, margin: 0 }}>
             Crafted with care
           </p>
         </div>
