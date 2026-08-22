@@ -9,10 +9,10 @@ export async function addProject(formData: FormData) {
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
   const link = formData.get('link') as string;
-  const image = formData.get('image') as string; 
+  const images = formData.getAll('images') as string[]; 
   const order = Number(formData.get('order')) || 0;
 
-  await Project.create({ title, description, link, image, order });
+  await Project.create({ title, description, link, images, order });
   revalidatePath('/');
 }
 
@@ -56,11 +56,16 @@ export async function updateProject(formData: FormData) {
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
   const link = formData.get('link') as string;
-  const image = formData.get('image') as string; 
+  const images = formData.getAll('images') as string[]; 
   const order = Number(formData.get('order')) || 0;
 
   const updateData: any = { title, description, link, order };
-  if (image) updateData.image = image; // Only update image if a new one is provided
+  if (images && images.length > 0) {
+    updateData.images = images;
+  } else {
+    // Allow saving empty array if all images are deleted
+    updateData.images = [];
+  }
 
   await Project.findByIdAndUpdate(id, updateData);
   revalidatePath('/');

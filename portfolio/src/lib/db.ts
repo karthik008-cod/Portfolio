@@ -35,7 +35,8 @@ export async function connectToDatabase() {
 const ProjectSchema = new mongoose.Schema({
   title: String,
   description: String,
-  image: String, // base64 or URL
+  image: String, // Keep for backward compatibility
+  images: [String], // Array of base64 or URLs
   link: String,
   order: Number,
 }, { timestamps: true });

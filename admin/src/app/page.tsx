@@ -78,7 +78,7 @@ export default async function AdminPage() {
             <ProjectForm />
             
             <ProjectList projects={projects.map(p => ({
-              id: p.id, title: p.title, description: p.description, link: p.link, image: p.image, order: p.order
+              id: p.id, title: p.title, description: p.description, link: p.link, image: p.image, images: p.images, order: p.order
             }))} />
           </section>
 

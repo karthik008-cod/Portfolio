@@ -351,27 +351,47 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 viewport={{ once: false, amount: 0.2 }}
                 style={{ display: 'flex', flexDirection: 'column', gap: 32 }}
               >
-                {/* Image — constrained, not full-width */}
+                {/* Image Gallery — constrained, not full-width */}
                 <motion.div
                   variants={i % 2 === 0 ? fadeLeft : fadeRight}
-                  style={{ maxWidth: 680, width: '100%', margin: i % 2 === 0 ? '0' : '0 0 0 auto', borderRadius: 12, overflow: 'hidden', position: 'relative' }}
+                  style={{ maxWidth: 680, width: '100%', margin: i % 2 === 0 ? '0' : '0 0 0 auto', position: 'relative' }}
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.04 }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    {p.image ? (
-                      <img
-                        src={p.image}
-                        alt={p.title}
-                        style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', display: 'block', borderRadius: 12 }}
-                      />
-                    ) : (
-                      <div style={{ width: '100%', aspectRatio: '16/10', background: '#1E1D1A', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ color: '#7A766C', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.2em' }}>No Image</span>
-                      </div>
-                    )}
-                  </motion.div>
+                  {p.images && p.images.length > 1 ? (
+                    <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', paddingBottom: 8, scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+                      {p.images.map((img: string, idx: number) => (
+                        <motion.div
+                          key={idx}
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.4 }}
+                          style={{ minWidth: '85%', scrollSnapAlign: 'start', borderRadius: 12, overflow: 'hidden' }}
+                        >
+                          <img
+                            src={img}
+                            alt={`${p.title} - ${idx + 1}`}
+                            style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', display: 'block', borderRadius: 12 }}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <motion.div
+                      whileHover={{ scale: 1.04 }}
+                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ borderRadius: 12, overflow: 'hidden' }}
+                    >
+                      {p.images?.[0] || p.image ? (
+                        <img
+                          src={p.images?.[0] || p.image}
+                          alt={p.title}
+                          style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', display: 'block', borderRadius: 12 }}
+                        />
+                      ) : (
+                        <div style={{ width: '100%', aspectRatio: '16/10', background: '#1E1D1A', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ color: '#7A766C', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.2em' }}>No Image</span>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
                   {/* Number badge */}
                   <motion.span
                     initial={{ opacity: 0, scale: 0.5 }}

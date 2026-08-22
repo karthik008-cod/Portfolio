@@ -15,7 +15,7 @@ export function ProjectList({ projects }: { projects: any[] }) {
           ) : (
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                {p.image && <img src={p.image} alt={p.title} style={{ width: '48px', height: '48px', borderRadius: '4px', objectFit: 'cover' }} />}
+                {(p.images?.length > 0 ? p.images[0] : p.image) && <img src={p.images?.length > 0 ? p.images[0] : p.image} alt={p.title} style={{ width: '48px', height: '48px', borderRadius: '4px', objectFit: 'cover' }} />}
                 <div>
                   <p style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 600, color: '#1C1B18' }}>{p.title}</p>
                   <p style={{ margin: 0, fontSize: '12px', color: '#6B6860', maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.description}</p>
