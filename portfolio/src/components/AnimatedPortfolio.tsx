@@ -63,6 +63,29 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+function GalleryScroll({ children }: { children: React.ReactNode }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollBy({ left: e.deltaY, behavior: 'auto' });
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  return (
+    <div ref={scrollRef} className="gallery-scroll" style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', paddingBottom: 16, WebkitOverflowScrolling: 'touch' }}>
+      {children}
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────────────────────
    ANIMATION VARIANTS
    ───────────────────────────────────────────────────────────── */

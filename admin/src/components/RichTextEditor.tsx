@@ -1,8 +1,6 @@
 'use client';
-import dynamic from 'next/dynamic';
-
-// Dynamically import react-quill to avoid SSR issues
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false, loading: () => <div style={{ height: '100px', background: '#F6F1EA', borderRadius: '4px', border: '1px solid #E6E0D5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9C9889', fontSize: '13px' }}>Loading editor...</div> });
+import { useEffect, useRef } from 'react';
+import Quill from 'quill';
 
 const modules = {
   toolbar: [
@@ -13,6 +11,31 @@ const modules = {
 };
 
 export function RichTextEditor({ value, onChange, placeholder }: { value: string, onChange: (val: string) => void, placeholder?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const quillRef = useRef<Quill | null>(null);
+
+  useEffect(() => {
+    if (containerRef.current && !quillRef.current) {
+      // Initialize Quill
+      quillRef.current = new Quill(containerRef.current, {
+        theme: 'snow',
+        placeholder,
+        modules,
+      });
+
+      // Set initial value
+      if (value) {
+        quillRef.current.clipboard.dangerouslyPasteHTML(value);
+      }
+
+      // Listen for changes
+      quillRef.current.on('text-change', () => {
+        if (quillRef.current) {
+          onChange(quillRef.current.root.innerHTML);
+        }
+      });
+    }
+  }, []);
 
   return (
     <div style={{ background: '#FFFDF8', borderRadius: '4px' }} className="rich-text-container">
@@ -39,13 +62,7 @@ export function RichTextEditor({ value, onChange, placeholder }: { value: string
           outline: none;
         }
       `}</style>
-      <ReactQuill 
-        theme="snow" 
-        value={value} 
-        onChange={onChange} 
-        modules={modules}
-        placeholder={placeholder}
-      />
+      <div ref={containerRef} />
     </div>
   );
 }
