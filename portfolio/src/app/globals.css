@@ -1,125 +1,147 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════ */
 :root {
-  --color-cream: #FAF7F2;
-  --color-warm-white: #F5F0E8;
-  --color-charcoal: #1A1A1A;
-  --color-dark: #0D0D0D;
-  --color-warm-gray: #8C8279;
-  --color-accent: #C9A96E;
-  --color-accent-dark: #A88B52;
-  --color-section-olive: #2C2C2A;
-  --color-section-warm: #F0EBE1;
-  --color-mocha: #3D3229;
+  /* Surface colors — warm stone palette */
+  --surface-primary: #FFFDF8;
+  --surface-warm: #F6F1EA;
+  --surface-dark: #121210;
+  --surface-darker: #0A0A09;
+  --surface-elevated: #1E1D1A;
+  --surface-muted: #2A2926;
+
+  /* Text colors */
+  --text-primary: #1C1B18;
+  --text-secondary: #6B6860;
+  --text-muted: #9C9889;
+  --text-on-dark: #E8E4DC;
+  --text-on-dark-muted: #7A766C;
+
+  /* Accent — burnished copper/terracotta */
+  --accent: #B8704A;
+  --accent-soft: #D4956E;
+  --accent-glow: rgba(184, 112, 74, 0.15);
+
+  /* Borders */
+  --border-light: #E6E0D5;
+  --border-dark: #2E2D28;
 }
 
+/* ═══════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════ */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--color-cream);
-  color: var(--color-charcoal);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
-/* Elegant scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-cream);
-}
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-accent);
+  background: var(--accent);
   border-radius: 100px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-dark);
-}
 
-/* Selection color */
 ::selection {
-  background: var(--color-accent);
+  background: var(--accent);
   color: white;
 }
 
-/* Noise texture overlay for sections */
-.noise-overlay {
-  position: relative;
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY CLASSES
+   ═══════════════════════════════════════════ */
+.font-display {
+  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
 }
-.noise-overlay::before {
+
+/* ═══════════════════════════════════════════
+   DECORATIVE ELEMENTS
+   ═══════════════════════════════════════════ */
+
+/* Grain texture overlay */
+.grain::after {
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
-/* Gradient line divider */
-.gradient-line {
+/* Soft horizontal rule */
+.divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  background: linear-gradient(90deg, transparent 0%, var(--border-light) 20%, var(--border-light) 80%, transparent 100%);
 }
 
-/* Animated underline for links */
-.link-hover {
+.divider-accent {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  opacity: 0.4;
+}
+
+/* Animated link underline */
+.hover-line {
   position: relative;
   display: inline-block;
 }
-.link-hover::after {
+.hover-line::after {
   content: '';
   position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
+  bottom: -3px;
   left: 0;
-  background-color: var(--color-accent);
-  transition: width 0.3s ease;
+  width: 0;
+  height: 1.5px;
+  background: var(--accent);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.link-hover:hover::after {
+.hover-line:hover::after {
   width: 100%;
 }
 
-/* Smooth reveal animation */
-@keyframes fadeUpIn {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ═══════════════════════════════════════════
+   SCROLL ANIMATIONS (CSS-only fallback)
+   ═══════════════════════════════════════════ */
+@keyframes scrollDown {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(10px); opacity: 1; }
+}
+.animate-scroll-down {
+  animation: scrollDown 2.5s ease-in-out infinite;
 }
 
-/* Subtle float animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Scroll indicator pulse */
-@keyframes scrollPulse {
-  0%, 100% { opacity: 1; transform: translateY(0); }
-  50% { opacity: 0.5; transform: translateY(8px); }
+@keyframes widthGrow {
+  from { width: 0; }
+  to { width: 60px; }
 }
 
-.animate-scroll-pulse {
-  animation: scrollPulse 2s ease-in-out infinite;
+/* ═══════════════════════════════════════════
+   UTILITY
+   ═══════════════════════════════════════════ */
+.text-balance {
+  text-wrap: balance;
 }
-
-/* Stagger animation helper */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
