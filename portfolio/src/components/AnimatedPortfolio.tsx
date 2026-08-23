@@ -184,6 +184,30 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
     return dateB - dateA;
   });
 
+  // Sort education by duration year (newest first)
+  const sortedEducation = [...education].sort((a: any, b: any) => {
+    const extractYear = (str: string) => {
+      const match = str?.match(/\d{4}/g);
+      return match ? Math.max(...match.map(Number)) : 0;
+    };
+    const yearA = extractYear(a.duration);
+    const yearB = extractYear(b.duration);
+    if (yearA !== yearB) return yearB - yearA;
+    return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+
+  // Sort certifications by date year (newest first)
+  const sortedCertifications = [...certifications].sort((a: any, b: any) => {
+    const extractYear = (str: string) => {
+      const match = str?.match(/\d{4}/g);
+      return match ? Math.max(...match.map(Number)) : 0;
+    };
+    const yearA = extractYear(a.date);
+    const yearB = extractYear(b.date);
+    if (yearA !== yearB) return yearB - yearA;
+    return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+
   return (
     <div style={{ width: '100%', position: 'relative', overflowX: 'clip', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
 
@@ -645,7 +669,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
           </motion.div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '32px' }}>
-            {certifications.map((cert: any, i: number) => (
+            {sortedCertifications.map((cert: any, i: number) => (
               <motion.div
                 key={cert.id}
                 variants={scaleIn}
@@ -704,7 +728,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
             {/* Timeline line */}
             <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: '#E6E0D5' }} />
             
-            {education.map((ed: any, i: number) => (
+            {sortedEducation.map((ed: any, i: number) => (
               <motion.div
                 key={ed.id}
                 variants={fadeUp}
