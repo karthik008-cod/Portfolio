@@ -361,7 +361,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
               { v: projects.length, l: 'Projects', s: '+' },
               { v: skills.length, l: 'Skills', s: '+' },
               { v: Object.keys(grouped).length, l: 'Domains', s: '' },
-              { v: new Date().getFullYear() - 2020, l: 'Years', s: '+' },
+              { v: new Date().getFullYear() - (parseInt(get('experience-start-year')) || 2020), l: 'Years', s: '+' },
             ].map((s, i) => (
               <motion.div
                 key={i}
