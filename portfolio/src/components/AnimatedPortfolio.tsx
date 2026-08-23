@@ -346,7 +346,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           PROJECTS SECTION
           ════════════════════════════════════════════════════════ */}
       <section style={{ position: 'relative', padding: '120px 24px', background: '#141311' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Section header */}
           <motion.div
             variants={fadeUp}
@@ -372,10 +372,20 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 .project-row {
                   flex-direction: row !important;
                   align-items: center;
-                  gap: 120px !important;
+                  justify-content: space-between;
                 }
                 .project-row.reverse {
                   flex-direction: row-reverse !important;
+                }
+                .project-row > .image-container {
+                  width: 42% !important;
+                  max-width: 500px !important;
+                  flex: none !important;
+                }
+                .project-row > .text-container {
+                  width: 50% !important;
+                  max-width: 600px !important;
+                  flex: none !important;
                 }
               }
             `}</style>
@@ -390,8 +400,9 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 style={{ display: 'flex', flexDirection: 'column', gap: '64px', position: 'relative' }}
               >
                 <motion.div
+                  className="image-container"
                   variants={i % 2 === 0 ? fadeLeft : fadeRight}
-                  style={{ width: '100%', flex: '1.2', position: 'relative' }}
+                  style={{ width: '100%', position: 'relative' }}
                 >
                   <StackedGallery p={p} onClick={() => setActiveGallery({ title: p.title, images: p.images || [] })} />
 
@@ -414,12 +425,12 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
 
                 {/* Text — side by side */}
                 <motion.div
+                  className="text-container"
                   variants={i % 2 === 0 ? fadeRight : fadeLeft}
                   custom={0.15}
                   style={{
                     width: '100%',
-                    flex: '1',
-                    padding: '0 8px',
+                    padding: '0',
                   }}
                 >
                   <h3 style={{
@@ -713,8 +724,8 @@ const StackedGallery = ({ p, onClick }: { p: any, onClick: () => void }) => {
 
         const baseZ = 10 - actualIndex;
         const rotate = isTop ? 0 : isLeft ? -8 : 8;
-        const xOffset = isTop ? 0 : isLeft ? -30 : 30;
-        const yOffset = isTop ? 0 : 20;
+        const xOffset = isTop ? '0%' : isLeft ? '-10%' : '10%';
+        const yOffset = isTop ? '0%' : '8%';
         
         return (
           <motion.div
@@ -722,8 +733,8 @@ const StackedGallery = ({ p, onClick }: { p: any, onClick: () => void }) => {
             variants={{
               hover: { 
                 rotate: isTop ? 0 : isLeft ? -14 : 14, 
-                x: isTop ? 0 : isLeft ? -60 : 60, 
-                y: isTop ? -10 : yOffset + 5,
+                x: isTop ? '0%' : isLeft ? '-18%' : '18%', 
+                y: isTop ? '-4%' : '12%',
                 scale: isTop ? 1.05 : 0.95
               }
             }}
