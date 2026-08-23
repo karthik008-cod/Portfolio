@@ -358,7 +358,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           >
             <SectionLabel>Work</SectionLabel>
             <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: '#E8E4DC', lineHeight: 1.05, margin: '0 0 12px' }}>
-              Selected Projects
+              Projects
             </h2>
             <p style={{ color: '#7A766C', fontWeight: 300, fontSize: 14, maxWidth: 380, lineHeight: 1.7 }}>
               A curated collection of work reflecting craft and attention to detail.
@@ -366,7 +366,18 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           </motion.div>
 
           {/* Project cards */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 100 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 120 }}>
+            <style>{`
+              @media (min-width: 900px) {
+                .project-row {
+                  flex-direction: row !important;
+                  align-items: center;
+                }
+                .project-row.reverse {
+                  flex-direction: row-reverse !important;
+                }
+              }
+            `}</style>
             {projects.map((p: any, i: number) => (
               <motion.article
                 key={p._id}
@@ -374,11 +385,12 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 whileInView="visible"
                 exit="exit"
                 viewport={{ once: false, amount: 0.2 }}
-                style={{ display: 'flex', flexDirection: 'column', gap: 32 }}
+                className={i % 2 === 0 ? 'project-row' : 'project-row reverse'}
+                style={{ display: 'flex', flexDirection: 'column', gap: '64px', position: 'relative' }}
               >
                 <motion.div
                   variants={i % 2 === 0 ? fadeLeft : fadeRight}
-                  style={{ maxWidth: 680, width: '100%', margin: i % 2 === 0 ? '0' : '0 0 0 auto', position: 'relative' }}
+                  style={{ width: '100%', flex: '1.2', position: 'relative' }}
                 >
                   <StackedGallery p={p} onClick={() => setActiveGallery({ title: p.title, images: p.images || [] })} />
 
@@ -399,25 +411,25 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                   </motion.span>
                 </motion.div>
 
-                {/* Text — offset to opposite side */}
+                {/* Text — side by side */}
                 <motion.div
                   variants={i % 2 === 0 ? fadeRight : fadeLeft}
                   custom={0.15}
                   style={{
-                    maxWidth: 480,
-                    alignSelf: i % 2 === 0 ? 'flex-end' : 'flex-start',
+                    width: '100%',
+                    flex: '1',
                     padding: '0 8px',
                   }}
                 >
                   <h3 style={{
                     fontFamily: "'DM Serif Display', Georgia, serif",
-                    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                    color: '#E8E4DC', margin: '0 0 12px', lineHeight: 1.2,
+                    fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
+                    color: '#E8E4DC', margin: '0 0 16px', lineHeight: 1.2,
                   }}>
                     {p.title}
                   </h3>
                   <div 
-                    style={{ color: '#7A766C', fontSize: 14, fontWeight: 300, lineHeight: 1.75, margin: '0 0 20px' }}
+                    style={{ color: '#7A766C', fontSize: 15, fontWeight: 300, lineHeight: 1.8, margin: '0 0 24px' }}
                     dangerouslySetInnerHTML={{ __html: p.description }}
                   />
                   {p.link && (
@@ -427,7 +439,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                       rel="noopener noreferrer"
                       whileHover={{ x: 4 }}
                       style={{
-                        color: '#B8704A', fontSize: 12, fontWeight: 600,
+                        color: '#B8704A', fontSize: 13, fontWeight: 600,
                         textTransform: 'uppercase', letterSpacing: '0.15em',
                         textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8,
                       }}
@@ -438,7 +450,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                   )}
                 </motion.div>
 
-                {/* Divider */}
+                {/* Divider (Optional, you can remove it or keep it below the whole row) */}
                 {i < projects.length - 1 && (
                   <motion.div
                     initial={{ scaleX: 0 }}
@@ -446,7 +458,8 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                     viewport={{ once: false }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     style={{
-                      height: 1, marginTop: 20, transformOrigin: 'left',
+                      position: 'absolute', bottom: -60, left: 0, right: 0,
+                      height: 1, transformOrigin: 'left',
                       background: 'linear-gradient(90deg, transparent 0%, rgba(184,112,74,0.3) 50%, transparent 100%)',
                     }}
                   />
