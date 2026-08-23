@@ -1,6 +1,6 @@
 'use server'
 
-import { connectToDatabase, Project, Skill, Detail } from '@/lib/db';
+import { connectToDatabase, Project, Skill, Detail, Education, Certification } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export async function addProject(formData: FormData) {
@@ -104,5 +104,84 @@ export async function updateSkill(formData: FormData) {
   const level = Number(formData.get('level')) || 50;
 
   await Skill.findByIdAndUpdate(id, { name, category, level });
+  revalidatePath('/');
+}
+
+// --- Education Actions ---
+
+export async function addEducation(formData: FormData) {
+  await connectToDatabase();
+  
+  const degree = formData.get('degree') as string;
+  const institution = formData.get('institution') as string;
+  const duration = formData.get('duration') as string;
+  const description = formData.get('description') as string;
+  const order = Number(formData.get('order')) || 0;
+
+  await Education.create({ degree, institution, duration, description, order });
+  revalidatePath('/');
+}
+
+export async function updateEducation(formData: FormData) {
+  await connectToDatabase();
+  
+  const id = formData.get('id') as string;
+  const degree = formData.get('degree') as string;
+  const institution = formData.get('institution') as string;
+  const duration = formData.get('duration') as string;
+  const description = formData.get('description') as string;
+  const order = Number(formData.get('order')) || 0;
+
+  await Education.findByIdAndUpdate(id, { degree, institution, duration, description, order });
+  revalidatePath('/');
+}
+
+export async function deleteEducation(id: string) {
+  await connectToDatabase();
+  await Education.findByIdAndDelete(id);
+  revalidatePath('/');
+}
+
+// --- Certification Actions ---
+
+export async function addCertification(formData: FormData) {
+  await connectToDatabase();
+  
+  const name = formData.get('name') as string;
+  const issuer = formData.get('issuer') as string;
+  const date = formData.get('date') as string;
+  const link = formData.get('link') as string;
+  const image = formData.get('image') as string;
+  const order = Number(formData.get('order')) || 0;
+
+  await Certification.create({ name, issuer, date, link, image, order });
+  revalidatePath('/');
+}
+
+export async function updateCertification(formData: FormData) {
+  await connectToDatabase();
+  
+  const id = formData.get('id') as string;
+  const name = formData.get('name') as string;
+  const issuer = formData.get('issuer') as string;
+  const date = formData.get('date') as string;
+  const link = formData.get('link') as string;
+  const image = formData.get('image') as string;
+  const order = Number(formData.get('order')) || 0;
+
+  const updateData: any = { name, issuer, date, link, order };
+  if (image) {
+    updateData.image = image;
+  } else if (image === '') { // if explicitly cleared
+    updateData.image = '';
+  }
+
+  await Certification.findByIdAndUpdate(id, updateData);
+  revalidatePath('/');
+}
+
+export async function deleteCertification(id: string) {
+  await connectToDatabase();
+  await Certification.findByIdAndDelete(id);
   revalidatePath('/');
 }

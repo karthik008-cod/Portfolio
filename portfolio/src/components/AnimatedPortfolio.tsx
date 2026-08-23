@@ -142,7 +142,7 @@ const stagger: any = {
 /* ─────────────────────────────────────────────────────────────
    MAIN COMPONENT
    ───────────────────────────────────────────────────────────── */
-export function AnimatedPortfolio({ projects, skills, details }: any) {
+export function AnimatedPortfolio({ projects, skills, details, education = [], certifications = [] }: any) {
   const [activeGallery, setActiveGallery] = useState<{ title: string, images: string[] } | null>(null);
   const [activeDownload, setActiveDownload] = useState<{ title: string, links: {name: string, url: string}[] } | null>(null);
   const [activeGuide, setActiveGuide] = useState<{ title: string, content: string } | null>(null);
@@ -344,6 +344,61 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          EDUCATION SECTION
+          ════════════════════════════════════════════════════════ */}
+      <section style={{ position: 'relative', padding: '120px 24px', background: '#FFFDF8' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            exit="exit"
+            viewport={{ once: false, amount: 0.3 }}
+            style={{ marginBottom: 60 }}
+          >
+            <SectionLabel>Background</SectionLabel>
+            <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: '0 0 12px' }}>
+              Academic Journey
+            </h2>
+          </motion.div>
+
+          <div style={{ position: 'relative', paddingLeft: '24px' }}>
+            {/* Timeline line */}
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: '#E6E0D5' }} />
+            
+            {education.map((ed: any, i: number) => (
+              <motion.div
+                key={ed.id}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.3 }}
+                custom={i * 0.1}
+                style={{ position: 'relative', marginBottom: i === education.length - 1 ? 0 : 48 }}
+              >
+                {/* Timeline dot */}
+                <div style={{ position: 'absolute', left: -29, top: 6, width: 12, height: 12, borderRadius: '50%', background: '#B8704A', border: '3px solid #FFFDF8' }} />
+                
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#1C1B18', margin: '0 0 4px' }}>{ed.degree}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '15px', color: '#B8704A', fontWeight: 600 }}>{ed.institution}</span>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#E6E0D5' }} />
+                  <span style={{ fontSize: '13px', color: '#9C9889', fontWeight: 500, letterSpacing: '0.05em' }}>{ed.duration}</span>
+                </div>
+                {ed.description && (
+                  <div 
+                    style={{ fontSize: '15px', color: '#6B6860', lineHeight: 1.6, maxWidth: 600 }}
+                    dangerouslySetInnerHTML={{ __html: ed.description }}
+                  />
+                )}
+              </motion.div>
+            ))}
+            {education.length === 0 && <p style={{ color: '#9C9889' }}>No education details added yet.</p>}
+          </div>
         </div>
       </section>
 
@@ -608,6 +663,62 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
               {skills.length === 0 && <p style={{ color: '#9C9889' }}>No skills added yet.</p>}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          CERTIFICATIONS SECTION
+          ════════════════════════════════════════════════════════ */}
+      <section style={{ position: 'relative', padding: '120px 24px', background: '#F3EDE3' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            exit="exit"
+            viewport={{ once: false, amount: 0.3 }}
+            style={{ marginBottom: 80 }}
+          >
+            <SectionLabel>Achievements</SectionLabel>
+            <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: '0 0 12px' }}>
+              Credentials & Honors
+            </h2>
+          </motion.div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '32px' }}>
+            {certifications.map((cert: any, i: number) => (
+              <motion.div
+                key={cert.id}
+                variants={scaleIn}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.2 }}
+                custom={i * 0.1}
+                style={{ 
+                  background: '#FFFDF8', padding: '24px', borderRadius: '16px', 
+                  border: '1px solid rgba(184,112,74,0.1)', boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
+                  display: 'flex', flexDirection: 'column'
+                }}
+              >
+                {cert.image && (
+                  <div style={{ marginBottom: '20px', cursor: 'zoom-in' }} onClick={() => setActiveGallery({ title: cert.name, images: [cert.image] })}>
+                    <img src={cert.image} alt={cert.name} style={{ width: '100%', height: '160px', objectFit: 'contain', background: '#F9F6F0', borderRadius: '8px', padding: '12px' }} />
+                  </div>
+                )}
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1C1B18', margin: '0 0 8px', lineHeight: 1.3 }}>{cert.name}</h3>
+                <p style={{ fontSize: '14px', color: '#6B6860', margin: '0 0 16px', flex: 1 }}>{cert.issuer}</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #E6E0D5', paddingTop: '16px' }}>
+                  <span style={{ fontSize: '12px', color: '#9C9889', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{cert.date}</span>
+                  {cert.link && (
+                    <a href={cert.link} target="_blank" rel="noopener noreferrer" style={{ color: '#B8704A', fontSize: '13px', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      Verify <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          {certifications.length === 0 && <p style={{ color: '#9C9889', textAlign: 'center' }}>No credentials added yet.</p>}
         </div>
       </section>
 

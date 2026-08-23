@@ -1,7 +1,11 @@
-import { connectToDatabase, Project, Skill, Detail } from '@/lib/db';
+import { connectToDatabase, Project, Skill, Detail, Education, Certification } from '@/lib/db';
 import { ProjectForm } from '@/components/ProjectForm';
 import { ProjectList } from '@/components/ProjectList';
 import { SkillList } from '@/components/SkillList';
+import { EducationForm } from '@/components/EducationForm';
+import { EducationList } from '@/components/EducationList';
+import { CertificationForm } from '@/components/CertificationForm';
+import { CertificationList } from '@/components/CertificationList';
 import { addSkill, updateAllDetails } from '@/app/actions';
 import { SubmitButton } from '@/components/SubmitButton';
 import { RichTextInput } from '@/components/RichTextInput';
@@ -13,6 +17,8 @@ export default async function AdminPage() {
   const projects = await Project.find().sort({ order: 1 });
   const skills = await Skill.find();
   const details = await Detail.find();
+  const education = await Education.find().sort({ order: 1 });
+  const certifications = await Certification.find().sort({ order: 1 });
 
   const getDetail = (key: string) => details.find(d => d.key === key)?.value || '';
 
@@ -101,6 +107,38 @@ export default async function AdminPage() {
 
             <SkillList skills={skills.map(s => ({
               id: s.id, name: s.name, category: s.category, level: s.level
+            }))} />
+          </section>
+        </div>
+
+        {/* Second Row for Education and Certifications */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', marginTop: '32px' }}>
+
+          {/* Education */}
+          <section style={{ background: '#FFF', border: '1px solid #E6E0D5', borderRadius: '8px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid #F6F1EA' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 700, margin: 0 }}>Academic Journey</h2>
+              <span style={{ fontSize: '12px', color: '#9C9889' }}>{education.length} total</span>
+            </div>
+
+            <EducationForm />
+            
+            <EducationList education={education.map(ed => ({
+              id: ed.id, degree: ed.degree, institution: ed.institution, duration: ed.duration, description: ed.description, order: ed.order
+            }))} />
+          </section>
+
+          {/* Certifications */}
+          <section style={{ background: '#FFF', border: '1px solid #E6E0D5', borderRadius: '8px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid #F6F1EA' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 700, margin: 0 }}>Credentials & Honors</h2>
+              <span style={{ fontSize: '12px', color: '#9C9889' }}>{certifications.length} total</span>
+            </div>
+
+            <CertificationForm />
+
+            <CertificationList certifications={certifications.map(c => ({
+              id: c.id, name: c.name, issuer: c.issuer, date: c.date, link: c.link, image: c.image, order: c.order
             }))} />
           </section>
         </div>

@@ -61,3 +61,24 @@ const SkillSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 export const Skill = mongoose.models.Skill || mongoose.model('Skill', SkillSchema);
+
+const EducationSchema = new mongoose.Schema({
+  degree: String,
+  institution: String,
+  duration: String,
+  description: String,
+  order: Number,
+}, { timestamps: true });
+
+export const Education = mongoose.models.Education || mongoose.model('Education', EducationSchema);
+
+const CertificationSchema = new mongoose.Schema({
+  name: String,
+  issuer: String,
+  date: String,
+  link: String,
+  image: String,
+  order: Number,
+}, { timestamps: true });
+
+export const Certification = mongoose.models.Certification || mongoose.model('Certification', CertificationSchema);
