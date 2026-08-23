@@ -167,7 +167,11 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
   const { scrollYProgress } = useScroll();
   const barScale = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
 
-  const get = (key: string) => details.find((d: any) => d.key === key)?.value || '';
+  const get = (key: string) => {
+    let val = details.find((d: any) => d.key === key)?.value || '';
+    if (key === 'hero-title' && val === 'Yuvaan Kaarthekeya') val = 'Yuvaa Kaarthikeyaa';
+    return val;
+  };
 
   // Group skills
   const grouped = skills.reduce((a: any, s: any) => {

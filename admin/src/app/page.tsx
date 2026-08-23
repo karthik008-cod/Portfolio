@@ -14,7 +14,11 @@ export default async function AdminPage() {
   const skills = await Skill.find();
   const details = await Detail.find();
 
-  const getDetail = (key: string) => details.find(d => d.key === key)?.value || '';
+  const getDetail = (key: string) => {
+    let val = details.find(d => d.key === key)?.value || '';
+    if (key === 'hero-title' && val === 'Yuvaan Kaarthekeya') val = 'Yuvaa Kaarthikeyaa';
+    return val;
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: '#FFFDF8', color: '#1C1B18', fontFamily: "system-ui, -apple-system, sans-serif" }}>
