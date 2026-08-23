@@ -272,20 +272,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           )}
         </motion.div>
 
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.5 }}
-          style={{ position: 'absolute', bottom: 36, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
-        >
-          <span style={{ fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.35em', color: '#9C9889', fontWeight: 500 }}>Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ width: 1, height: 32, background: 'linear-gradient(180deg, #B8704A 0%, transparent 100%)' }}
-          />
-        </motion.div>
+
       </section>
 
       {/* ════════════════════════════════════════════════════════

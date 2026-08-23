@@ -34,7 +34,7 @@ export default async function AdminPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Title</label>
-                <input name="hero-title" defaultValue={getDetail('hero-title')} placeholder="Hi, I'm Yuvaan" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
+                <input name="hero-title" defaultValue={getDetail('hero-title')} placeholder="Hi, I'm Yuvaa Kaarthikeyaa" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
