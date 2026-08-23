@@ -39,6 +39,8 @@ const ProjectSchema = new mongoose.Schema({
   images: [String], // Array of base64 or URLs
   link: String,
   order: Number,
+  downloadLinks: [{ name: String, url: String }],
+  installationGuide: String,
 }, { timestamps: true });
 
 export const Project = mongoose.models.Project || mongoose.model('Project', ProjectSchema);

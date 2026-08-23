@@ -5,12 +5,18 @@ import { SubmitButton } from './SubmitButton';
 import { RichTextInput } from './RichTextInput';
 
 export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: () => void }) {
-  // Initialize with existing images or backward compatible single image
   const initialImages = project ? (project.images?.length > 0 ? project.images : (project.image ? [project.image] : [])) : [];
   const [images, setImages] = useState<string[]>(initialImages);
+  const [downloadLinks, setDownloadLinks] = useState<{name: string, url: string}[]>(project?.downloadLinks || []);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [resetKey, setResetKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const addDownloadLink = () => setDownloadLinks(prev => [...prev, { name: '', url: '' }]);
+  const removeDownloadLink = (index: number) => setDownloadLinks(prev => prev.filter((_, i) => i !== index));
+  const updateDownloadLink = (index: number, field: 'name' | 'url', value: string) => {
+    setDownloadLinks(prev => prev.map((link, i) => i === index ? { ...link, [field]: value } : link));
+  };
 
   const handleSubmit = async (formData: FormData) => {
     await action(formData);
@@ -19,6 +25,7 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
     if (!isEdit) {
       formRef.current?.reset();
       setImages([]);
+      setDownloadLinks([]);
       setResetKey(prev => prev + 1);
     }
   };
@@ -65,9 +72,30 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
       <RichTextInput key={resetKey} name="description" defaultValue={project?.description} placeholder="Description" />
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-        <input name="link" defaultValue={project?.link} placeholder="URL (optional)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
+        <input name="link" defaultValue={project?.link} placeholder="Main Project URL (optional)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
         <input type="number" name="order" defaultValue={project?.order} placeholder="Order (1, 2...)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
       </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid #E6E0D5', paddingTop: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Download Links (e.g. APKs)</label>
+          <button type="button" onClick={addDownloadLink} style={{ background: '#B8704A', color: 'white', border: 'none', borderRadius: '4px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' }}>+ Add Link</button>
+        </div>
+        <input type="hidden" name="downloadLinks" value={JSON.stringify(downloadLinks)} />
+        {downloadLinks.map((link, i) => (
+          <div key={i} style={{ display: 'flex', gap: '8px' }}>
+            <input value={link.name} onChange={e => updateDownloadLink(i, 'name', e.target.value)} placeholder="Name (e.g. Google Drive)" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '6px 10px', borderRadius: '4px', fontSize: '13px', outline: 'none' }} />
+            <input value={link.url} onChange={e => updateDownloadLink(i, 'url', e.target.value)} placeholder="URL" style={{ flex: 2, border: '1px solid #E6E0D5', padding: '6px 10px', borderRadius: '4px', fontSize: '13px', outline: 'none' }} />
+            <button type="button" onClick={() => removeDownloadLink(i)} style={{ background: '#E6E0D5', color: '#1C1B18', border: 'none', borderRadius: '4px', padding: '0 12px', cursor: 'pointer' }}>✕</button>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ borderTop: '1px solid #E6E0D5', paddingTop: '12px' }}>
+        <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860', display: 'block', marginBottom: '8px' }}>Installation Guide (Optional)</label>
+        <RichTextInput key={`guide-${resetKey}`} name="installationGuide" defaultValue={project?.installationGuide} placeholder="Add step-by-step installation instructions..." />
+      </div>
+      
       
       <div>
         <label style={{ fontSize: '12px', fontWeight: 500, color: '#6B6860', display: 'block', marginBottom: '4px' }}>Images</label>

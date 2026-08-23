@@ -11,8 +11,11 @@ export async function addProject(formData: FormData) {
   const link = formData.get('link') as string;
   const images = formData.getAll('images') as string[]; 
   const order = Number(formData.get('order')) || 0;
+  const installationGuide = formData.get('installationGuide') as string;
+  let downloadLinks = [];
+  try { downloadLinks = JSON.parse(formData.get('downloadLinks') as string); } catch(e) {}
 
-  await Project.create({ title, description, link, images, order });
+  await Project.create({ title, description, link, images, order, downloadLinks, installationGuide });
   revalidatePath('/');
 }
 
@@ -76,8 +79,11 @@ export async function updateProject(formData: FormData) {
   const link = formData.get('link') as string;
   const images = formData.getAll('images') as string[]; 
   const order = Number(formData.get('order')) || 0;
+  const installationGuide = formData.get('installationGuide') as string;
+  let downloadLinks = [];
+  try { downloadLinks = JSON.parse(formData.get('downloadLinks') as string); } catch(e) {}
 
-  const updateData: any = { title, description, link, order };
+  const updateData: any = { title, description, link, order, installationGuide, downloadLinks };
   if (images && images.length > 0) {
     updateData.images = images;
   } else {

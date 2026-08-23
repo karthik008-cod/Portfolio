@@ -142,9 +142,9 @@ const stagger: any = {
 /* ─────────────────────────────────────────────────────────────
    MAIN COMPONENT
    ───────────────────────────────────────────────────────────── */
-export function AnimatedPortfolio({ projects, skills, details }: any) {
   const [activeGallery, setActiveGallery] = useState<{ title: string, images: string[] } | null>(null);
-  
+  const [activeDownload, setActiveDownload] = useState<{ title: string, links: {name: string, url: string}[] } | null>(null);
+  const [activeGuide, setActiveGuide] = useState<{ title: string, content: string } | null>(null);
   const heroRef = useRef(null);
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
@@ -440,22 +440,54 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                     style={{ color: '#9C9889', fontSize: 'clamp(1.05rem, 1.5vw, 1.15rem)', fontWeight: 300, lineHeight: 1.85, margin: '0 0 32px' }}
                     dangerouslySetInnerHTML={{ __html: p.description }}
                   />
-                  {p.link && (
-                    <motion.a
-                      href={p.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ x: 4 }}
-                      style={{
-                        color: '#B8704A', fontSize: 13, fontWeight: 600,
-                        textTransform: 'uppercase', letterSpacing: '0.15em',
-                        textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8,
-                      }}
-                    >
-                      View Project
-                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                    </motion.a>
-                  )}
+                  <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+                    {p.link && (
+                      <motion.a
+                        href={p.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ x: 4 }}
+                        style={{
+                          color: '#B8704A', fontSize: 13, fontWeight: 600,
+                          textTransform: 'uppercase', letterSpacing: '0.15em',
+                          textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8,
+                        }}
+                      >
+                        View Project
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                      </motion.a>
+                    )}
+                    {p.downloadLinks && p.downloadLinks.length > 0 && (
+                      <motion.button
+                        onClick={() => setActiveDownload({ title: p.title, links: p.downloadLinks })}
+                        whileHover={{ x: 4 }}
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                          color: '#B8704A', fontSize: 13, fontWeight: 600,
+                          textTransform: 'uppercase', letterSpacing: '0.15em',
+                          textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8,
+                        }}
+                      >
+                        Download APK
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                      </motion.button>
+                    )}
+                    {p.installationGuide && (
+                      <motion.button
+                        onClick={() => setActiveGuide({ title: p.title, content: p.installationGuide })}
+                        whileHover={{ x: 4 }}
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                          color: '#B8704A', fontSize: 13, fontWeight: 600,
+                          textTransform: 'uppercase', letterSpacing: '0.15em',
+                          textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8,
+                        }}
+                      >
+                        Install Guide
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      </motion.button>
+                    )}
+                  </div>
                 </motion.div>
 
                 {/* Divider (Optional, you can remove it or keep it below the whole row) */}
@@ -671,6 +703,97 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 )}
               </GalleryScroll>
             </div>
+          </motion.div>
+        )}
+
+        {/* Download Links Popup */}
+        {activeDownload && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px',
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              style={{
+                background: '#FFFDF8', borderRadius: 16, padding: '32px 40px', width: '100%', maxWidth: 500,
+                boxShadow: '0 30px 60px rgba(0,0,0,0.3)', border: '1px solid #E6E0D5',
+                position: 'relative'
+              }}
+            >
+              <button 
+                onClick={() => setActiveDownload(null)}
+                style={{ position: 'absolute', top: 20, right: 20, background: '#E6E0D5', border: 'none', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >✕</button>
+              
+              <h3 style={{ margin: '0 0 24px', fontSize: 24, fontFamily: "'DM Serif Display', Georgia, serif", color: '#1C1B18' }}>
+                Download Options
+              </h3>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {activeDownload.links.map((link, i) => (
+                  <a
+                    key={i}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '16px 20px', borderRadius: 8, border: '1px solid #E6E0D5',
+                      textDecoration: 'none', color: '#1C1B18', background: '#FFF',
+                      transition: 'all 0.2s', fontWeight: 500
+                    }}
+                  >
+                    {link.name}
+                    <svg width="18" height="18" fill="none" stroke="#B8704A" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Installation Guide Popup */}
+        {activeGuide && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px',
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              style={{
+                background: '#FFFDF8', borderRadius: 16, padding: '40px', width: '100%', maxWidth: 700, maxHeight: '80vh',
+                boxShadow: '0 30px 60px rgba(0,0,0,0.3)', border: '1px solid #E6E0D5',
+                position: 'relative', display: 'flex', flexDirection: 'column'
+              }}
+            >
+              <button 
+                onClick={() => setActiveGuide(null)}
+                style={{ position: 'absolute', top: 20, right: 20, background: '#E6E0D5', border: 'none', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >✕</button>
+              
+              <h3 style={{ margin: '0 0 24px', fontSize: 28, fontFamily: "'DM Serif Display', Georgia, serif", color: '#1C1B18' }}>
+                Installation Guide
+              </h3>
+              
+              <div 
+                style={{ color: '#4A4843', fontSize: '15px', lineHeight: 1.8, overflowY: 'auto', paddingRight: '12px' }}
+                dangerouslySetInnerHTML={{ __html: activeGuide.content }}
+              />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
