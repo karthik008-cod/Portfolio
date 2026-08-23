@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { addProject, updateProject } from '@/app/actions';
 import { SubmitButton } from './SubmitButton';
 import { RichTextInput } from './RichTextInput';
@@ -9,6 +9,19 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
   const initialImages = project ? (project.images?.length > 0 ? project.images : (project.image ? [project.image] : [])) : [];
   const [images, setImages] = useState<string[]>(initialImages);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [resetKey, setResetKey] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (formData: FormData) => {
+    await action(formData);
+    
+    // Clear form if we're adding a new project
+    if (!isEdit) {
+      formRef.current?.reset();
+      setImages([]);
+      setResetKey(prev => prev + 1);
+    }
+  };
 
   const moveImage = (index: number, direction: -1 | 1) => {
     setImages(prev => {
@@ -45,11 +58,11 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
   const action = isEdit ? updateProject : addProject;
 
   return (
-    <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: '#F6F1EA', padding: '16px', borderRadius: '8px', border: '1px solid #E6E0D5', marginTop: isEdit ? '12px' : '0' }}>
+    <form ref={formRef} action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: '#F6F1EA', padding: '16px', borderRadius: '8px', border: '1px solid #E6E0D5', marginTop: isEdit ? '12px' : '0' }}>
       {isEdit && <input type="hidden" name="id" value={project.id} />}
       
       <input name="title" defaultValue={project?.title} placeholder="Project title" required style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
-      <RichTextInput name="description" defaultValue={project?.description} placeholder="Description" />
+      <RichTextInput key={resetKey} name="description" defaultValue={project?.description} placeholder="Description" />
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <input name="link" defaultValue={project?.link} placeholder="URL (optional)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
