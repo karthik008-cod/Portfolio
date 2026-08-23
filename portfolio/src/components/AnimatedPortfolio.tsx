@@ -181,7 +181,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
   }, {} as Record<string, any[]>);
 
   return (
-    <div style={{ width: '100%', position: 'relative', overflowX: 'hidden', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
+    <div style={{ width: '100%', position: 'relative', overflowX: 'clip', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
 
       {/* ── Scroll progress bar ── */}
       <motion.div
