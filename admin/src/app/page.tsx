@@ -83,7 +83,7 @@ export default async function AdminPage() {
             <ProjectForm />
             
             <ProjectList projects={projects.map(p => ({
-              id: p.id, title: p.title, description: p.description, link: p.link, image: p.image, images: p.images ? Array.from(p.images) : [], order: p.order
+              id: p.id, title: p.title, description: p.description || '', link: p.link || '', image: p.image || '', images: p.images ? Array.from(p.images) : [], order: p.order || 0
             }))} />
           </section>
 
@@ -106,7 +106,7 @@ export default async function AdminPage() {
             </form>
 
             <SkillList skills={skills.map(s => ({
-              id: s.id, name: s.name, category: s.category, level: s.level
+              id: s.id, name: s.name, category: s.category || '', level: s.level || 50
             }))} />
           </section>
         </div>
@@ -124,7 +124,7 @@ export default async function AdminPage() {
             <EducationForm />
             
             <EducationList education={education.map(ed => ({
-              id: ed.id, degree: ed.degree, institution: ed.institution, duration: ed.duration, description: ed.description, order: ed.order
+              id: ed.id, degree: ed.degree, institution: ed.institution, duration: ed.duration, description: ed.description || '', order: ed.order || 0
             }))} />
           </section>
 
@@ -138,7 +138,7 @@ export default async function AdminPage() {
             <CertificationForm />
 
             <CertificationList certifications={certifications.map(c => ({
-              id: c.id, name: c.name, issuer: c.issuer, date: c.date, link: c.link, image: c.image, order: c.order
+              id: c.id, name: c.name, issuer: c.issuer, date: c.date, link: c.link || '', image: c.image || '', order: c.order || 0
             }))} />
           </section>
         </div>
