@@ -456,7 +456,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
                   </h3>
                   {p.releaseDate && (
                     <p style={{ color: '#B8704A', fontSize: 13, fontWeight: 600, letterSpacing: '0.1em', marginTop: '-8px', marginBottom: '16px', textTransform: 'uppercase' }}>
-                      Released: {new Date(p.releaseDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                      Released: {new Date(p.releaseDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}
                     </p>
                   )}
                   <div 
