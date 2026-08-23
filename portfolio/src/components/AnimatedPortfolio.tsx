@@ -142,6 +142,7 @@ const stagger: any = {
    MAIN COMPONENT
    ───────────────────────────────────────────────────────────── */
 export function AnimatedPortfolio({ projects, skills, details }: any) {
+  const [activeGallery, setActiveGallery] = useState<{ title: string, images: string[] } | null>(null);
   const heroRef = useRef(null);
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
@@ -375,64 +376,12 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 viewport={{ once: false, amount: 0.2 }}
                 style={{ display: 'flex', flexDirection: 'column', gap: 32 }}
               >
-                {/* Image Gallery — constrained, not full-width */}
                 <motion.div
                   variants={i % 2 === 0 ? fadeLeft : fadeRight}
                   style={{ maxWidth: 680, width: '100%', margin: i % 2 === 0 ? '0' : '0 0 0 auto', position: 'relative' }}
-                  className="portfolio-gallery-container"
                 >
-                  <style>{`
-                    .portfolio-gallery-container .gallery-scroll {
-                      scrollbar-width: thin;
-                      scrollbar-color: #B8704A transparent;
-                    }
-                    .portfolio-gallery-container .gallery-scroll::-webkit-scrollbar {
-                      height: 6px;
-                    }
-                    .portfolio-gallery-container .gallery-scroll::-webkit-scrollbar-track {
-                      background: transparent;
-                    }
-                    .portfolio-gallery-container .gallery-scroll::-webkit-scrollbar-thumb {
-                      background-color: #B8704A;
-                      border-radius: 10px;
-                    }
-                  `}</style>
-                  {p.images && p.images.length > 1 ? (
-                    <div className="gallery-scroll" style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', paddingBottom: 16, WebkitOverflowScrolling: 'touch' }}>
-                      {p.images.map((img: string, idx: number) => (
-                        <motion.div
-                          key={idx}
-                          whileHover={{ scale: 1.02 }}
-                          transition={{ duration: 0.4 }}
-                          style={{ minWidth: '85%', scrollSnapAlign: 'start', borderRadius: 12, overflow: 'hidden' }}
-                        >
-                          <img
-                            src={img}
-                            alt={`${p.title} - ${idx + 1}`}
-                            style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', display: 'block', borderRadius: 12 }}
-                          />
-                        </motion.div>
-                      ))}
-                    </div>
-                  ) : (
-                    <motion.div
-                      whileHover={{ scale: 1.04 }}
-                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                      style={{ borderRadius: 12, overflow: 'hidden' }}
-                    >
-                      {p.images?.[0] || p.image ? (
-                        <img
-                          src={p.images?.[0] || p.image}
-                          alt={p.title}
-                          style={{ width: '100%', aspectRatio: '16/10', objectFit: 'cover', display: 'block', borderRadius: 12 }}
-                        />
-                      ) : (
-                        <div style={{ width: '100%', aspectRatio: '16/10', background: '#1E1D1A', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ color: '#7A766C', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.2em' }}>No Image</span>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
+                  <StackedGallery p={p} onClick={() => setActiveGallery({ title: p.title, images: p.images || [] })} />
+
                   {/* Number badge */}
                   <motion.span
                     initial={{ opacity: 0, scale: 0.5 }}
@@ -440,10 +389,10 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                     viewport={{ once: false }}
                     transition={{ delay: 0.3, duration: 0.4 }}
                     style={{
-                      position: 'absolute', top: 16, left: 16,
+                      position: 'absolute', top: 16, left: 16, zIndex: 20,
                       fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em',
                       color: '#B8704A', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
-                      padding: '6px 12px', borderRadius: 20,
+                      padding: '6px 12px', borderRadius: 20, pointerEvents: 'none'
                     }}
                   >
                     {String(i + 1).padStart(2, '0')}
@@ -657,6 +606,147 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           </p>
         </div>
       </footer>
+
+      {/* ════════════════════════════════════════════════════════
+          FULLSCREEN LIGHTBOX
+          ════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {activeGallery && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(10px)',
+              display: 'flex', flexDirection: 'column',
+            }}
+          >
+            <div style={{ padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ color: 'white', margin: 0, fontSize: 20, fontWeight: 600, fontFamily: "'DM Serif Display', Georgia, serif" }}>{activeGallery.title}</h3>
+              <button 
+                onClick={() => setActiveGallery(null)}
+                style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: 44, height: 44, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+              <GalleryScroll>
+                {activeGallery.images.map((img, i) => (
+                  <motion.div
+                    key={i}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    style={{ minWidth: '85vw', maxWidth: '85vw', height: '80vh', scrollSnapAlign: 'center', flexShrink: 0, margin: '0 2vw', borderRadius: 16, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <img src={img} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 16, boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }} />
+                  </motion.div>
+                ))}
+                {activeGallery.images.length === 0 && (
+                  <div style={{ width: '100vw', display: 'flex', justifyContent: 'center' }}>
+                    <span style={{ color: '#7A766C' }}>No images available.</span>
+                  </div>
+                )}
+              </GalleryScroll>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+
+const StackedGallery = ({ p, onClick }: { p: any, onClick: () => void }) => {
+  const images = p.images || [];
+  
+  if (images.length === 0) {
+    const fallback = p.image;
+    return (
+      <motion.div 
+        whileHover={{ scale: 1.04 }} 
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{ borderRadius: 12, overflow: 'hidden', width: '100%', aspectRatio: '16/10', cursor: 'pointer' }}
+        onClick={onClick}
+      >
+        {fallback ? (
+          <img src={fallback} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', background: '#1E1D1A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: '#7A766C', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.2em' }}>No Image</span>
+          </div>
+        )}
+      </motion.div>
+    );
+  }
+
+  const displayImages = images.slice(0, 3).reverse();
+  
+  return (
+    <motion.div 
+      style={{ position: 'relative', width: '100%', aspectRatio: '16/10', cursor: 'pointer' }}
+      onClick={onClick}
+      whileHover="hover"
+    >
+      {displayImages.map((img: string, reversedIndex: number) => {
+        // reversedIndex: if length is 3, index 0 is actually the 3rd image (right), index 1 is 2nd (left), index 2 is 1st (top)
+        const total = displayImages.length;
+        const actualIndex = total - 1 - reversedIndex;
+        
+        const isTop = actualIndex === 0;
+        const isLeft = actualIndex === 1;
+        const isRight = actualIndex === 2;
+
+        const baseZ = 10 - actualIndex;
+        const rotate = isTop ? 0 : isLeft ? -8 : 8;
+        const xOffset = isTop ? 0 : isLeft ? -30 : 30;
+        const yOffset = isTop ? 0 : 20;
+        
+        return (
+          <motion.div
+            key={actualIndex}
+            variants={{
+              hover: { 
+                rotate: isTop ? 0 : isLeft ? -14 : 14, 
+                x: isTop ? 0 : isLeft ? -60 : 60, 
+                y: isTop ? -10 : yOffset + 5,
+                scale: isTop ? 1.05 : 0.95
+              }
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            style={{
+              position: 'absolute',
+              top: 0, left: 0, width: '100%', height: '100%',
+              zIndex: baseZ,
+              rotate: rotate,
+              x: xOffset,
+              y: yOffset,
+              scale: isTop ? 1 : 0.92,
+              transformOrigin: 'bottom center',
+              borderRadius: 16,
+              overflow: 'hidden',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+              border: '2px solid rgba(255,255,255,0.05)'
+            }}
+          >
+            <motion.img
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.6 }}
+              src={img}
+              alt={`${p.title} preview`}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+            {isTop && (
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)', opacity: 0.3 }} />
+            )}
+            {isTop && images.length > 3 && (
+              <div style={{ position: 'absolute', bottom: 16, right: 16, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '6px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700, letterSpacing: '0.05em' }}>
+                +{images.length - 3} MORE
+              </div>
+            )}
+          </motion.div>
+        );
+      })}
+    </motion.div>
+  );
+};
