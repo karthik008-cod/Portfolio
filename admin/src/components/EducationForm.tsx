@@ -24,7 +24,7 @@ export function EducationForm() {
         <input name="duration" placeholder="Duration (e.g., 2020 - 2024)" required style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
         <input type="number" name="order" placeholder="Order (1, 2...)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
       </div>
-      <RichTextInput key={resetKey} name="description" placeholder="Description (optional)" />
+      <RichTextInput key={resetKey} name="description" defaultValue="" placeholder="Description (optional)" />
       
       <SubmitButton pendingText="Adding..." style={{ background: '#B8704A', color: '#fff', border: 'none', borderRadius: '4px', padding: '10px 16px', fontSize: '14px', fontWeight: 600, marginTop: '8px' }}>
         Add Education
