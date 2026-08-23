@@ -1,6 +1,7 @@
 'use client';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
+import { ScrollTypingHtml } from './ScrollTypingHtml';
 
 /* ─────────────────────────────────────────────────────────────
    ANIMATED COUNTER
@@ -143,10 +144,17 @@ const stagger: any = {
    ───────────────────────────────────────────────────────────── */
 export function AnimatedPortfolio({ projects, skills, details }: any) {
   const [activeGallery, setActiveGallery] = useState<{ title: string, images: string[] } | null>(null);
+  
   const heroRef = useRef(null);
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
+  });
+
+  const aboutSectionRef = useRef(null);
+  const { scrollYProgress: aboutScrollProgress } = useScroll({
+    target: aboutSectionRef,
+    offset: ['start start', 'end end']
   });
 
   // Parallax transforms for hero
@@ -278,39 +286,36 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
       {/* ════════════════════════════════════════════════════════
           ABOUT SECTION
           ════════════════════════════════════════════════════════ */}
-      <section style={{ position: 'relative', padding: '120px 24px', background: '#F3EDE3' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 48 }}>
-            {/* Heading */}
-            <motion.div
-              variants={fadeLeft}
-              initial="hidden"
-              whileInView="visible"
-              exit="exit"
-              viewport={{ once: false, amount: 0.3 }}
-            >
-              <SectionLabel>About</SectionLabel>
-              <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: 0 }}>
-                Who I Am
-              </h2>
-            </motion.div>
+      <section ref={aboutSectionRef} style={{ position: 'relative', background: '#F3EDE3', height: '250vh' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 24px', overflow: 'hidden' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto', width: '100%' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 48 }}>
+              {/* Heading */}
+              <motion.div
+                variants={fadeLeft}
+                initial="hidden"
+                whileInView="visible"
+                exit="exit"
+                viewport={{ once: false, amount: 0.3 }}
+              >
+                <SectionLabel>About</SectionLabel>
+                <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: 0 }}>
+                  Who I Am
+                </h2>
+              </motion.div>
 
-            {/* Body text */}
-            <motion.div
-              variants={fadeUp}
-              custom={0.15}
-              initial="hidden"
-              whileInView="visible"
-              exit="exit"
-              viewport={{ once: false, amount: 0.3 }}
-            >
-              <div 
-                style={{ fontSize: 'clamp(1rem, 1.8vw, 1.2rem)', lineHeight: 1.8, color: '#3A3832', fontWeight: 300, maxWidth: 700 }}
-                dangerouslySetInnerHTML={{ __html: get('about-me') || 'Write your biography in the admin dashboard and it will appear here.' }}
-              />
-            </motion.div>
+              {/* Body text — Animated with scroll */}
+              <ScrollTypingHtml html={get('about-me') || 'Write your biography in the admin dashboard...'} scrollYProgress={aboutScrollProgress} />
+            </div>
           </div>
+        </div>
+      </section>
 
+      {/* ════════════════════════════════════════════════════════
+          STATS SECTION
+          ════════════════════════════════════════════════════════ */}
+      <section style={{ position: 'relative', padding: '80px 24px 120px', background: '#F3EDE3' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
           {/* Stats row */}
           <motion.div
             variants={stagger}
