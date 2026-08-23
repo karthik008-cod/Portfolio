@@ -41,6 +41,7 @@ const ProjectSchema = new mongoose.Schema({
   order: Number,
   downloadLinks: [{ name: String, url: String }],
   installationGuide: String,
+  releaseDate: String,
 }, { timestamps: true });
 
 export const Project = mongoose.models.Project || mongoose.model('Project', ProjectSchema);

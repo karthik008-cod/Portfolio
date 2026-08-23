@@ -177,6 +177,13 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
     return a;
   }, {} as Record<string, any[]>);
 
+  // Sort projects by release date
+  const sortedProjects = [...projects].sort((a: any, b: any) => {
+    const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : new Date(a.createdAt || 0).getTime();
+    const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : new Date(b.createdAt || 0).getTime();
+    return dateB - dateA;
+  });
+
   return (
     <div style={{ width: '100%', position: 'relative', overflowX: 'clip', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
 
@@ -347,60 +354,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          EDUCATION SECTION
-          ════════════════════════════════════════════════════════ */}
-      <section style={{ position: 'relative', padding: '120px 24px', background: '#FFFDF8' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            exit="exit"
-            viewport={{ once: false, amount: 0.3 }}
-            style={{ marginBottom: 60 }}
-          >
-            <SectionLabel>Background</SectionLabel>
-            <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: '0 0 12px' }}>
-              Academic Journey
-            </h2>
-          </motion.div>
-
-          <div style={{ position: 'relative', paddingLeft: '24px' }}>
-            {/* Timeline line */}
-            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: '#E6E0D5' }} />
-            
-            {education.map((ed: any, i: number) => (
-              <motion.div
-                key={ed.id}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: false, amount: 0.3 }}
-                custom={i * 0.1}
-                style={{ position: 'relative', marginBottom: i === education.length - 1 ? 0 : 48 }}
-              >
-                {/* Timeline dot */}
-                <div style={{ position: 'absolute', left: -29, top: 6, width: 12, height: 12, borderRadius: '50%', background: '#B8704A', border: '3px solid #FFFDF8' }} />
-                
-                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#1C1B18', margin: '0 0 4px' }}>{ed.degree}</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '15px', color: '#B8704A', fontWeight: 600 }}>{ed.institution}</span>
-                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#E6E0D5' }} />
-                  <span style={{ fontSize: '13px', color: '#9C9889', fontWeight: 500, letterSpacing: '0.05em' }}>{ed.duration}</span>
-                </div>
-                {ed.description && (
-                  <div 
-                    style={{ fontSize: '15px', color: '#6B6860', lineHeight: 1.6, maxWidth: 600 }}
-                    dangerouslySetInnerHTML={{ __html: ed.description }}
-                  />
-                )}
-              </motion.div>
-            ))}
-            {education.length === 0 && <p style={{ color: '#9C9889' }}>No education details added yet.</p>}
-          </div>
-        </div>
-      </section>
+      {/* Education section moved below Certifications */}
 
       {/* ════════════════════════════════════════════════════════
           PROJECTS SECTION
@@ -449,7 +403,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
                 }
               }
             `}</style>
-            {projects.map((p: any, i: number) => (
+            {sortedProjects.map((p: any, i: number) => (
               <motion.article
                 key={p._id}
                 initial="hidden"
@@ -500,6 +454,11 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
                   }}>
                     {p.title}
                   </h3>
+                  {p.releaseDate && (
+                    <p style={{ color: '#B8704A', fontSize: 13, fontWeight: 600, letterSpacing: '0.1em', marginTop: '-8px', marginBottom: '16px', textTransform: 'uppercase' }}>
+                      Released: {new Date(p.releaseDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                  )}
                   <div 
                     style={{ color: '#9C9889', fontSize: 'clamp(1.05rem, 1.5vw, 1.15rem)', fontWeight: 300, lineHeight: 1.85, margin: '0 0 32px' }}
                     dangerouslySetInnerHTML={{ __html: p.description }}
@@ -719,6 +678,61 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
             ))}
           </div>
           {certifications.length === 0 && <p style={{ color: '#9C9889', textAlign: 'center' }}>No credentials added yet.</p>}
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          EDUCATION SECTION
+          ════════════════════════════════════════════════════════ */}
+      <section style={{ position: 'relative', padding: '120px 24px', background: '#FFFDF8' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            exit="exit"
+            viewport={{ once: false, amount: 0.3 }}
+            style={{ marginBottom: 60 }}
+          >
+            <SectionLabel>Background</SectionLabel>
+            <h2 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1C1B18', lineHeight: 1.15, margin: '0 0 12px' }}>
+              Academic Journey
+            </h2>
+          </motion.div>
+
+          <div style={{ position: 'relative', paddingLeft: '24px' }}>
+            {/* Timeline line */}
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: '#E6E0D5' }} />
+            
+            {education.map((ed: any, i: number) => (
+              <motion.div
+                key={ed.id}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.3 }}
+                custom={i * 0.1}
+                style={{ position: 'relative', marginBottom: i === education.length - 1 ? 0 : 48 }}
+              >
+                {/* Timeline dot */}
+                <div style={{ position: 'absolute', left: -29, top: 6, width: 12, height: 12, borderRadius: '50%', background: '#B8704A', border: '3px solid #FFFDF8' }} />
+                
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#1C1B18', margin: '0 0 4px' }}>{ed.degree}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '15px', color: '#B8704A', fontWeight: 600 }}>{ed.institution}</span>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#E6E0D5' }} />
+                  <span style={{ fontSize: '13px', color: '#9C9889', fontWeight: 500, letterSpacing: '0.05em' }}>{ed.duration}</span>
+                </div>
+                {ed.description && (
+                  <div 
+                    style={{ fontSize: '15px', color: '#6B6860', lineHeight: 1.6, maxWidth: 600 }}
+                    dangerouslySetInnerHTML={{ __html: ed.description }}
+                  />
+                )}
+              </motion.div>
+            ))}
+            {education.length === 0 && <p style={{ color: '#9C9889' }}>No education details added yet.</p>}
+          </div>
         </div>
       </section>
 

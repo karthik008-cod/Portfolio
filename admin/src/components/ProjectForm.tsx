@@ -109,9 +109,10 @@ const compressImage = (file: File): Promise<string> => {
       <input name="title" defaultValue={project?.title} placeholder="Project title" required style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
       <RichTextInput key={resetKey} name="description" defaultValue={project?.description} placeholder="Description" />
       
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
         <input name="link" defaultValue={project?.link} placeholder="Main Project URL (optional)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
         <input type="number" name="order" defaultValue={project?.order} placeholder="Order (1, 2...)" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
+        <input type="date" name="releaseDate" defaultValue={project?.releaseDate} placeholder="Release Date" style={{ border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none', color: '#6B6860' }} title="Date of Release" />
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid #E6E0D5', paddingTop: '12px' }}>
