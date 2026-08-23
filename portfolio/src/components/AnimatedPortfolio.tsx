@@ -142,6 +142,7 @@ const stagger: any = {
 /* ─────────────────────────────────────────────────────────────
    MAIN COMPONENT
    ───────────────────────────────────────────────────────────── */
+export function AnimatedPortfolio({ projects, skills, details }: any) {
   const [activeGallery, setActiveGallery] = useState<{ title: string, images: string[] } | null>(null);
   const [activeDownload, setActiveDownload] = useState<{ title: string, links: {name: string, url: string}[] } | null>(null);
   const [activeGuide, setActiveGuide] = useState<{ title: string, content: string } | null>(null);
