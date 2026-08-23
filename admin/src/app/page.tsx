@@ -46,6 +46,11 @@ export default async function AdminPage() {
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Contact Email</label>
                 <input name="email" defaultValue={getDetail('email')} placeholder="hello@example.com" type="email" style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
               </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Intro (Paragraph)</label>
+                <textarea name="hero-intro" defaultValue={getDetail('hero-intro')} placeholder="I build software around problems worth solving..." style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none', minHeight: '60px', resize: 'vertical' }} />
+              </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '20px' }}>

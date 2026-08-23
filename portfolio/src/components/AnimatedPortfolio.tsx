@@ -259,6 +259,17 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           >
             {get('hero-subtitle') || 'A brief subtitle about you'}
           </motion.p>
+
+          {get('hero-intro') && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: '#7A766C', fontWeight: 400, maxWidth: 600, margin: '24px auto 0', lineHeight: 1.8 }}
+            >
+              {get('hero-intro')}
+            </motion.p>
+          )}
         </motion.div>
 
         {/* Scroll cue */}
