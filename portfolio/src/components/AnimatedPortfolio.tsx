@@ -227,14 +227,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
           style={{ y: heroY, opacity: heroOp, scale: heroScale, rotateZ: heroRotate }}
           className="relative z-10 text-center px-6"
         >
-          <motion.p
-            initial={{ opacity: 0, y: 20, letterSpacing: '0.1em' }}
-            animate={{ opacity: 1, y: 0, letterSpacing: '0.3em' }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#B8704A', marginBottom: 32 }}
-          >
-            Portfolio
-          </motion.p>
+
 
           <motion.h1
             initial={{ opacity: 0, y: 60, scale: 0.95 }}
@@ -263,7 +256,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            style={{ fontSize: 'clamp(0.95rem, 2vw, 1.15rem)', color: '#6B6860', fontWeight: 300, maxWidth: 420, margin: '0 auto', lineHeight: 1.7 }}
+            style={{ fontSize: 'clamp(0.95rem, 2vw, 1.15rem)', color: '#6B6860', fontWeight: 300, maxWidth: 420, margin: '0 auto', lineHeight: 1.7, textAlign: 'center' }}
           >
             {get('hero-subtitle') || 'A brief subtitle about you'}
           </motion.p>
@@ -273,7 +266,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.9 }}
-              style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: '#7A766C', fontWeight: 400, maxWidth: 600, margin: '24px auto 0', lineHeight: 1.8 }}
+              style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: '#7A766C', fontWeight: 400, maxWidth: 600, margin: '24px auto 0', lineHeight: 1.8, textAlign: 'center' }}
             >
               {get('hero-intro')}
             </motion.p>
