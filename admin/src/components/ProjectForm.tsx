@@ -41,17 +41,55 @@ export function ProjectForm({ project, onCancel }: { project?: any, onCancel?: (
     });
   };
 
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+const compressImage = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1280;
+        const MAX_HEIGHT = 1280;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height *= MAX_WIDTH / width));
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width *= MAX_HEIGHT / height));
+            height = MAX_HEIGHT;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/webp', 0.7));
+      };
+      img.onerror = (error) => reject(error);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages(prev => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
+    for (let i = 0; i < files.length; i++) {
+      try {
+        const compressedDataUrl = await compressImage(files[i]);
+        setImages(prev => [...prev, compressedDataUrl]);
+      } catch (err) {
+        console.error("Error compressing image", err);
+      }
+    }
     
     // Clear the input so the same files can be selected again if needed
     e.target.value = '';

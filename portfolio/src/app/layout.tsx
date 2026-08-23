@@ -17,6 +17,9 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Portfolio — Professional Work & Projects",
   description: "A curated portfolio showcasing professional projects, skills, and experience.",
+  icons: {
+    icon: '/logo.png'
+  }
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -20,7 +20,10 @@ export default async function AdminPage() {
     <div style={{ minHeight: '100vh', background: '#FFFDF8', color: '#1C1B18', fontFamily: "system-ui, -apple-system, sans-serif" }}>
       {/* Header */}
       <header style={{ background: '#FFF', borderBottom: '1px solid #E6E0D5', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
-        <h1 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#1C1B18' }}>Portfolio Admin</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src="/logo.png" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+          <h1 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#1C1B18' }}>Portfolio Admin</h1>
+        </div>
         <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#B8704A', background: 'rgba(184,112,74,0.1)', padding: '4px 10px', borderRadius: '100px' }}>Dashboard</span>
       </header>
 
