@@ -372,6 +372,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                 .project-row {
                   flex-direction: row !important;
                   align-items: center;
+                  gap: 120px !important;
                 }
                 .project-row.reverse {
                   flex-direction: row-reverse !important;
@@ -429,7 +430,7 @@ export function AnimatedPortfolio({ projects, skills, details }: any) {
                     {p.title}
                   </h3>
                   <div 
-                    style={{ color: '#7A766C', fontSize: 15, fontWeight: 300, lineHeight: 1.8, margin: '0 0 24px' }}
+                    style={{ color: '#9C9889', fontSize: 'clamp(1.05rem, 1.5vw, 1.15rem)', fontWeight: 300, lineHeight: 1.85, margin: '0 0 32px' }}
                     dangerouslySetInnerHTML={{ __html: p.description }}
                   />
                   {p.link && (
