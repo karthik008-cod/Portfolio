@@ -162,7 +162,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
   const heroY = useTransform(heroScroll, [0, 1], ['0%', '50%']);
   const heroOp = useTransform(heroScroll, [0, 0.6], [1, 0]);
   const heroScale = useTransform(heroScroll, [0, 1], [1, 0.88]);
-  const heroRotate = useTransform(heroScroll, [0, 1], [0, -2]);
+  const heroRotate = useTransform(heroScroll, [0, 0.6], [0, -8]);
 
   // Global scroll progress bar
   const { scrollYProgress } = useScroll();
