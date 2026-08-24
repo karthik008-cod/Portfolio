@@ -233,7 +233,7 @@ function MonogramLoader({ onComplete }: { onComplete: () => void }) {
           {/* SVG glow filter */}
           <defs>
             <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -245,14 +245,14 @@ function MonogramLoader({ onComplete }: { onComplete: () => void }) {
               <stop offset="100%" stopColor="#8B5233" />
             </linearGradient>
             <linearGradient id="fillGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#D4956E" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#B8704A" stopOpacity="0.08" />
+              <stop offset="0%" stopColor="#D4956E" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#B8704A" stopOpacity="0.1" />
             </linearGradient>
           </defs>
 
           {/* Y — filled shape (appears after draw) */}
           <motion.path
-            d="M 20 20 L 38 50 L 38 82 L 42 82 L 42 50 L 60 20 L 55 20 L 40 46 L 25 20 Z"
+            d="M 10 18 L 28 48 L 28 82 L 36 82 L 36 48 L 54 18 L 46 18 L 32 42 L 18 18 Z"
             fill="url(#fillGrad)"
             initial={{ opacity: 0 }}
             animate={phase === 'filled' ? { opacity: 1 } : { opacity: 0 }}
@@ -261,7 +261,7 @@ function MonogramLoader({ onComplete }: { onComplete: () => void }) {
 
           {/* K — filled shape (appears after draw) */}
           <motion.path
-            d="M 62 20 L 62 82 L 66 82 L 66 54 L 86 82 L 91 82 L 69 52 L 89 20 L 84 20 L 66 48 L 66 20 Z"
+            d="M 54 18 L 54 82 L 62 82 L 62 56 L 80 82 L 90 82 L 68 52 L 88 18 L 80 18 L 62 46 L 62 18 Z"
             fill="url(#fillGrad)"
             initial={{ opacity: 0 }}
             animate={phase === 'filled' ? { opacity: 1 } : { opacity: 0 }}
@@ -270,9 +270,9 @@ function MonogramLoader({ onComplete }: { onComplete: () => void }) {
 
           {/* Y — stroke path */}
           <motion.path
-            d="M 20 20 L 40 50 L 40 82 M 60 20 L 40 50"
+            d="M 10 18 L 32 50 L 32 82 M 54 18 L 32 50"
             stroke="url(#strokeGrad)"
-            strokeWidth="2"
+            strokeWidth="4"
             filter="url(#glow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
@@ -281,9 +281,9 @@ function MonogramLoader({ onComplete }: { onComplete: () => void }) {
 
           {/* K — stroke path */}
           <motion.path
-            d="M 64 20 L 64 82 M 88 20 L 64 52 L 88 82"
+            d="M 58 18 L 58 82 M 86 18 L 58 52 L 86 82"
             stroke="url(#strokeGrad)"
-            strokeWidth="2"
+            strokeWidth="4"
             filter="url(#glow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
