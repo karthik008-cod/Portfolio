@@ -143,48 +143,181 @@ const stagger: any = {
    MONOGRAM LOADER
    ───────────────────────────────────────────────────────────── */
 function MonogramLoader({ onComplete }: { onComplete: () => void }) {
+  const [phase, setPhase] = useState<'drawing' | 'filled' | 'done'>('drawing');
+
   useEffect(() => {
-    // 2.5 seconds total for the drawing animation before we hide the loader
-    const t = setTimeout(onComplete, 2500);
-    return () => clearTimeout(t);
+    // Phase 1: Draw strokes (0 → 1.8s)
+    // Phase 2: Fill in + glow pulse (1.8s → 2.8s)
+    // Phase 3: Exit (2.8s → 3.6s)
+    const t1 = setTimeout(() => setPhase('filled'), 1800);
+    const t2 = setTimeout(() => setPhase('done'), 2800);
+    const t3 = setTimeout(onComplete, 3200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onComplete]);
 
+  // Floating particles around the monogram
+  const particles = Array.from({ length: 12 }, (_, i) => ({
+    x: 50 + Math.cos((i / 12) * Math.PI * 2) * (38 + Math.random() * 12),
+    y: 50 + Math.sin((i / 12) * Math.PI * 2) * (38 + Math.random() * 12),
+    delay: 1.2 + i * 0.08,
+    size: 1.2 + Math.random() * 1.2,
+  }));
+
   return (
-    <motion.div
-      exit={{ y: '-100%' }}
-      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        background: '#1C1B18', // Dark background to make the bronze stroke pop
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transformOrigin: 'top'
-      }}
-    >
-      <motion.svg 
-        width="140" height="140" viewBox="0 0 100 100" fill="none" stroke="#B8704A" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter"
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ duration: 0.4 }}
+    <>
+      {/* Left curtain */}
+      <motion.div
+        initial={{ x: 0 }}
+        animate={phase === 'done' ? { x: '-100%' } : { x: 0 }}
+        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        style={{
+          position: 'fixed', top: 0, left: 0, width: '50%', height: '100%',
+          zIndex: 9999, background: '#1C1B18',
+        }}
+      />
+      {/* Right curtain */}
+      <motion.div
+        initial={{ x: 0 }}
+        animate={phase === 'done' ? { x: '100%' } : { x: 0 }}
+        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        style={{
+          position: 'fixed', top: 0, right: 0, width: '50%', height: '100%',
+          zIndex: 9999, background: '#1C1B18',
+        }}
+      />
+
+      {/* Center content overlay */}
+      <motion.div
+        animate={phase === 'done' ? { opacity: 0, scale: 1.3 } : { opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 10000,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          pointerEvents: phase === 'done' ? 'none' : 'auto',
+        }}
       >
-        {/* Y */}
-        <motion.path
-          d="M 25 30 L 40 55 L 40 80 M 55 30 L 40 55"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        {/* Outer rotating ring */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.6, rotate: -90 }}
+          animate={{ opacity: 0.15, scale: 1, rotate: 0 }}
+          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+          style={{
+            position: 'absolute',
+            width: 280, height: 280,
+            border: '1px solid #B8704A',
+            borderRadius: '50%',
+          }}
         />
-        {/* K */}
-        <motion.path
-          d="M 65 30 L 65 80 M 85 30 L 65 55 L 85 80"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+
+        {/* Inner rotating ring */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.4, rotate: 90 }}
+          animate={{ opacity: 0.1, scale: 1, rotate: 0 }}
+          transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+          style={{
+            position: 'absolute',
+            width: 320, height: 320,
+            border: '1px solid #B8704A',
+            borderRadius: '50%',
+          }}
         />
-      </motion.svg>
-    </motion.div>
+
+        <motion.svg
+          width="220" height="220" viewBox="0 0 100 100" fill="none"
+          strokeLinecap="round" strokeLinejoin="round"
+          initial={{ scale: 0.9 }}
+          animate={phase === 'filled' ? { scale: 1.05 } : { scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* SVG glow filter */}
+          <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#D4956E" />
+              <stop offset="50%" stopColor="#B8704A" />
+              <stop offset="100%" stopColor="#8B5233" />
+            </linearGradient>
+            <linearGradient id="fillGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#D4956E" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#B8704A" stopOpacity="0.08" />
+            </linearGradient>
+          </defs>
+
+          {/* Y — filled shape (appears after draw) */}
+          <motion.path
+            d="M 20 20 L 38 50 L 38 82 L 42 82 L 42 50 L 60 20 L 55 20 L 40 46 L 25 20 Z"
+            fill="url(#fillGrad)"
+            initial={{ opacity: 0 }}
+            animate={phase === 'filled' ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.6 }}
+          />
+
+          {/* K — filled shape (appears after draw) */}
+          <motion.path
+            d="M 62 20 L 62 82 L 66 82 L 66 54 L 86 82 L 91 82 L 69 52 L 89 20 L 84 20 L 66 48 L 66 20 Z"
+            fill="url(#fillGrad)"
+            initial={{ opacity: 0 }}
+            animate={phase === 'filled' ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          />
+
+          {/* Y — stroke path */}
+          <motion.path
+            d="M 20 20 L 40 50 L 40 82 M 60 20 L 40 50"
+            stroke="url(#strokeGrad)"
+            strokeWidth="2"
+            filter="url(#glow)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ pathLength: { duration: 1.4, ease: [0.16, 1, 0.3, 1] }, opacity: { duration: 0.3 } }}
+          />
+
+          {/* K — stroke path */}
+          <motion.path
+            d="M 64 20 L 64 82 M 88 20 L 64 52 L 88 82"
+            stroke="url(#strokeGrad)"
+            strokeWidth="2"
+            filter="url(#glow)"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ pathLength: { duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.5 }, opacity: { duration: 0.3, delay: 0.5 } }}
+          />
+
+          {/* Floating particles */}
+          {particles.map((p, i) => (
+            <motion.circle
+              key={i}
+              cx={p.x} cy={p.y} r={p.size}
+              fill="#B8704A"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: [0, 0.6, 0], scale: [0, 1, 0] }}
+              transition={{ duration: 1.4, delay: p.delay, ease: 'easeInOut' }}
+            />
+          ))}
+        </motion.svg>
+
+        {/* Subtle tagline below the monogram */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0.4, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.6 }}
+          style={{
+            marginTop: 32, fontSize: 11, fontWeight: 600,
+            textTransform: 'uppercase', letterSpacing: '0.35em',
+            color: '#B8704A', fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          }}
+        >
+          Portfolio
+        </motion.p>
+      </motion.div>
+    </>
   );
 }
 
