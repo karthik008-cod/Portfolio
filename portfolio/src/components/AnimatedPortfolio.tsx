@@ -140,9 +140,59 @@ const stagger: any = {
 };
 
 /* ─────────────────────────────────────────────────────────────
+   MONOGRAM LOADER
+   ───────────────────────────────────────────────────────────── */
+function MonogramLoader({ onComplete }: { onComplete: () => void }) {
+  useEffect(() => {
+    // 2.5 seconds total for the drawing animation before we hide the loader
+    const t = setTimeout(onComplete, 2500);
+    return () => clearTimeout(t);
+  }, [onComplete]);
+
+  return (
+    <motion.div
+      exit={{ y: '-100%' }}
+      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        background: '#1C1B18', // Dark background to make the bronze stroke pop
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transformOrigin: 'top'
+      }}
+    >
+      <motion.svg 
+        width="140" height="140" viewBox="0 0 100 100" fill="none" stroke="#B8704A" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter"
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        {/* Y */}
+        <motion.path
+          d="M 25 30 L 40 55 L 40 80 M 55 30 L 40 55"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        />
+        {/* K */}
+        <motion.path
+          d="M 65 30 L 65 80 M 85 30 L 65 55 L 85 80"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+        />
+      </motion.svg>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
    MAIN COMPONENT
    ───────────────────────────────────────────────────────────── */
 export function AnimatedPortfolio({ projects, skills, details, education = [], certifications = [] }: any) {
+  const [showLoader, setShowLoader] = useState(true);
   const [activeGallery, setActiveGallery] = useState<{ title: string, images: string[] } | null>(null);
   const [activeDownload, setActiveDownload] = useState<{ title: string, links: {name: string, url: string}[] } | null>(null);
   const [activeGuide, setActiveGuide] = useState<{ title: string, content: string } | null>(null);
@@ -167,6 +217,14 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
   // Global scroll progress bar
   const { scrollYProgress } = useScroll();
   const barScale = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
+
+  useEffect(() => {
+    if (showLoader) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [showLoader]);
 
   const get = (key: string) => details.find((d: any) => d.key === key)?.value || '';
 
@@ -210,6 +268,9 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
 
   return (
     <div style={{ width: '100%', position: 'relative', overflowX: 'clip', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
+      <AnimatePresence>
+        {showLoader && <MonogramLoader onComplete={() => setShowLoader(false)} />}
+      </AnimatePresence>
 
       {/* ── Scroll progress bar ── */}
       <motion.div
