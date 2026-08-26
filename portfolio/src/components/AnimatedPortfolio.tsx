@@ -839,6 +839,42 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
               ))}
               {skills.length === 0 && <p style={{ color: '#9C9889' }}>No skills added yet.</p>}
             </div>
+
+            {/* Profiles Quick Section */}
+            {(get('linkedin-url') || get('github-url') || get('leetcode-url')) && (
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                exit="exit"
+                viewport={{ once: false, amount: 0.3 }}
+                style={{ marginTop: 24, paddingTop: 48, borderTop: '1px solid #E6E0D5', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              >
+                <h3 style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#B8704A', marginBottom: 24 }}>
+                  Around the Web
+                </h3>
+                <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {get('linkedin-url') && (
+                    <a href={get('linkedin-url')} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 24px', background: '#F6F1EA', borderRadius: 100, color: '#1C1B18', textDecoration: 'none', fontWeight: 600, fontSize: 14, transition: 'all 0.2s', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }} onMouseOver={e => { e.currentTarget.style.background = '#E6E0D5'; e.currentTarget.style.transform = 'translateY(-2px)' }} onMouseOut={e => { e.currentTarget.style.background = '#F6F1EA'; e.currentTarget.style.transform = 'translateY(0)' }}>
+                      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                      LinkedIn
+                    </a>
+                  )}
+                  {get('github-url') && (
+                    <a href={get('github-url')} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 24px', background: '#F6F1EA', borderRadius: 100, color: '#1C1B18', textDecoration: 'none', fontWeight: 600, fontSize: 14, transition: 'all 0.2s', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }} onMouseOver={e => { e.currentTarget.style.background = '#E6E0D5'; e.currentTarget.style.transform = 'translateY(-2px)' }} onMouseOut={e => { e.currentTarget.style.background = '#F6F1EA'; e.currentTarget.style.transform = 'translateY(0)' }}>
+                      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                      GitHub
+                    </a>
+                  )}
+                  {get('leetcode-url') && (
+                    <a href={get('leetcode-url')} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 24px', background: '#F6F1EA', borderRadius: 100, color: '#1C1B18', textDecoration: 'none', fontWeight: 600, fontSize: 14, transition: 'all 0.2s', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }} onMouseOver={e => { e.currentTarget.style.background = '#E6E0D5'; e.currentTarget.style.transform = 'translateY(-2px)' }} onMouseOut={e => { e.currentTarget.style.background = '#F6F1EA'; e.currentTarget.style.transform = 'translateY(0)' }}>
+                      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                      LeetCode
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>
@@ -1019,7 +1055,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
             )}
             {get('leetcode-url') && (
               <a href={get('leetcode-url')} target="_blank" rel="noopener noreferrer" style={{ color: '#7A766C', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#B8704A'} onMouseOut={e => e.currentTarget.style.color = '#7A766C'}>
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125 2.22 5.32 5.32 0 0 0 1.05 2.203 5.27 5.27 0 0 0 1.956 1.408 5.3 5.3 0 0 0 2.253.313 5.265 5.265 0 0 0 2.146-.928l5.426-4.637c.397-.336.599-.861.599-1.42 0-.559-.202-1.084-.599-1.42l-5.426-4.636a1.365 1.365 0 0 0-1.879 0c-.396.335-.599.86-.599 1.419 0 .559.203 1.084.6 1.42l3.418 2.923-3.418 2.923a.36.36 0 0 1-.225.071.36.36 0 0 1-.226-.071.344.344 0 0 1-.09-.232.344.344 0 0 1 .09-.233l2.871-3.076-2.871-3.076a.344.344 0 0 1-.09-.232.344.344 0 0 1 .09-.233l5.405-5.787a.367.367 0 0 1 .253-.118.367.367 0 0 1 .253.118l3.418 2.922 3.418-2.922a.367.367 0 0 1 .253-.118.367.367 0 0 1 .253.118l4.475 4.792c.397.336.599.861.599 1.42 0 .559-.202 1.084-.599 1.42l-4.475 4.792a1.365 1.365 0 0 1-1.879 0c-.396-.335-.599-.86-.599-1.419 0-.559.203-1.084.6-1.42l2.533-2.166-2.533-2.166a.344.344 0 0 0-.09-.233.344.344 0 0 0-.09.233l-2.533 2.166 2.533 2.166a1.365 1.365 0 0 1 0 1.942c-.247.209-.574.316-.94.316-.367 0-.693-.107-.94-.316l-3.418-2.923a1.41 1.41 0 0 1-.413-.972c0-.395.148-.767.413-.972l5.426-4.636a1.374 1.374 0 0 1 .961-.438 1.374 1.374 0 0 1 .96.438l5.405 5.787c1.373 1.47 1.373 3.864 0 5.334l-5.405 5.787a4.116 4.116 0 0 1-2.88 1.314c-1.09 0-2.115-.466-2.88-1.314l-5.426-4.637a4.12 4.12 0 0 1-1.238-2.915c0-1.18.423-2.298 1.238-2.915l3.418-2.923a1.41 1.41 0 0 1 .413-.972c0-.395-.148-.767-.413-.972l-5.426-4.636a1.374 1.374 0 0 1-.961-.438 1.374 1.374 0 0 1-.96.438l-4.475 4.792c-.397.336-.599.861-.599 1.42 0 .559.202 1.084.599 1.42l4.475 4.792a1.365 1.365 0 0 0 1.879 0c.396-.335.599-.86.599-1.419 0-.559-.203-1.084-.6-1.42L7.304 9.155l3.418 2.923a.36.36 0 0 1 .225.071.36.36 0 0 1 .226.071.344.344 0 0 1 .09.232.344.344 0 0 1-.09.233l-2.871 3.076 2.871 3.076a.344.344 0 0 1 .09.232.344.344 0 0 1-.09.233L5.405 24H1.374a1.374 1.374 0 0 1-.961-.438A1.37 1.37 0 0 1 0 22.59v-21.18a1.37 1.37 0 0 1 .413-.972A1.374 1.374 0 0 1 1.374 0h12.109z"/></svg>
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
               </a>
             )}
           </div>
