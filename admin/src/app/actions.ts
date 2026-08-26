@@ -62,6 +62,9 @@ export async function updateAllDetails(formData: FormData) {
   const email = formData.get('email') as string;
   const experienceStartYear = formData.get('experience-start-year') as string;
   const aboutMe = formData.get('about-me') as string;
+  const linkedinUrl = formData.get('linkedin-url') as string;
+  const githubUrl = formData.get('github-url') as string;
+  const leetcodeUrl = formData.get('leetcode-url') as string;
 
   if (heroTitle !== null) await Detail.findOneAndUpdate({ key: 'hero-title' }, { value: heroTitle }, { upsert: true });
   if (heroSubtitle !== null) await Detail.findOneAndUpdate({ key: 'hero-subtitle' }, { value: heroSubtitle }, { upsert: true });
@@ -69,6 +72,9 @@ export async function updateAllDetails(formData: FormData) {
   if (email !== null) await Detail.findOneAndUpdate({ key: 'email' }, { value: email }, { upsert: true });
   if (experienceStartYear !== null) await Detail.findOneAndUpdate({ key: 'experience-start-year' }, { value: experienceStartYear }, { upsert: true });
   if (aboutMe !== null) await Detail.findOneAndUpdate({ key: 'about-me' }, { value: aboutMe }, { upsert: true });
+  if (linkedinUrl !== null) await Detail.findOneAndUpdate({ key: 'linkedin-url' }, { value: linkedinUrl }, { upsert: true });
+  if (githubUrl !== null) await Detail.findOneAndUpdate({ key: 'github-url' }, { value: githubUrl }, { upsert: true });
+  if (leetcodeUrl !== null) await Detail.findOneAndUpdate({ key: 'leetcode-url' }, { value: leetcodeUrl }, { upsert: true });
 
   revalidatePath('/');
 }

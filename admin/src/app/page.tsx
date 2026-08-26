@@ -65,6 +65,21 @@ export default async function AdminPage() {
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>Hero Intro (Paragraph)</label>
                 <textarea name="hero-intro" defaultValue={getDetail('hero-intro')} placeholder="I build software around problems worth solving..." style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none', minHeight: '60px', resize: 'vertical' }} />
               </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>LinkedIn URL</label>
+                <input name="linkedin-url" defaultValue={getDetail('linkedin-url')} placeholder="https://linkedin.com/in/..." style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>GitHub URL</label>
+                <input name="github-url" defaultValue={getDetail('github-url')} placeholder="https://github.com/..." style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B6860' }}>LeetCode URL</label>
+                <input name="leetcode-url" defaultValue={getDetail('leetcode-url')} placeholder="https://leetcode.com/u/..." style={{ flex: 1, border: '1px solid #E6E0D5', padding: '8px 12px', borderRadius: '4px', fontSize: '14px', outline: 'none' }} />
+              </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '20px' }}>
