@@ -156,12 +156,15 @@ function MonogramLoader({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   // Floating particles around the monogram
-  const particles = Array.from({ length: 12 }, (_, i) => ({
-    x: 50 + Math.cos((i / 12) * Math.PI * 2) * (38 + Math.random() * 12),
-    y: 50 + Math.sin((i / 12) * Math.PI * 2) * (38 + Math.random() * 12),
-    delay: 1.2 + i * 0.08,
-    size: 1.2 + Math.random() * 1.2,
-  }));
+  const [particles, setParticles] = useState<Array<{x: number, y: number, delay: number, size: number}>>([]);
+  useEffect(() => {
+    setParticles(Array.from({ length: 12 }, (_, i) => ({
+      x: 50 + Math.cos((i / 12) * Math.PI * 2) * (38 + Math.random() * 12),
+      y: 50 + Math.sin((i / 12) * Math.PI * 2) * (38 + Math.random() * 12),
+      delay: 1.2 + i * 0.08,
+      size: 1.2 + Math.random() * 1.2,
+    })));
+  }, []);
 
   return (
     <>
@@ -901,7 +904,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '32px' }}>
             {sortedCertifications.map((cert: any, i: number) => (
               <motion.div
-                key={cert.id}
+                key={cert._id}
                 variants={scaleIn}
                 initial="hidden"
                 whileInView="visible"
@@ -960,7 +963,7 @@ export function AnimatedPortfolio({ projects, skills, details, education = [], c
             
             {sortedEducation.map((ed: any, i: number) => (
               <motion.div
-                key={ed.id}
+                key={ed._id}
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
